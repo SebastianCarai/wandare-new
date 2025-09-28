@@ -1,0 +1,59 @@
+<script setup lang="ts">
+const props = defineProps<{
+  activeNavItem: string
+}>();
+</script>
+
+
+<template>
+    <div class="navbar d-flex justify-content-between">
+        <div>
+            <img :class="{hidden: activeNavItem === 'home'}" class="navbar-icon" src="@/assets/icons/home-icon-white.svg" alt="Homepage Icon">
+            <img :class="{visible: activeNavItem === 'home'}" class="navbar-icon navbar-icon-active" src="@/assets/icons/home-icon-active.svg" alt="Homepage Icon Active">
+        </div>
+        <div>
+            <img :class="{hidden: activeNavItem === 'search'}" class="navbar-icon" src="@/assets/icons/search-icon-white.svg" alt="Search Icon">
+            <img :class="{visible: activeNavItem === 'search'}" class="navbar-icon navbar-icon-active" src="@/assets/icons/search-icon-active.svg" alt="Search Icon Active">
+        </div>
+        <div>
+            <img :class="{hidden: activeNavItem === 'create-post'}" class="navbar-icon" src="@/assets/icons/create-post-icon-white.svg" alt="Create Profile Icon">
+            <img :class="{visible: activeNavItem === 'create-post'}" class="navbar-icon navbar-icon-active" src="@/assets/icons/create-post-icon-active.svg" alt="Create Profile Icon Active">
+        </div>
+        <div>
+            <img :class="{hidden: activeNavItem === 'friends'}" class="navbar-icon" src="@/assets/icons/friends-icon-white.svg" alt="Friends Icon">
+            <img :class="{visible: activeNavItem === 'friends'}" class="navbar-icon navbar-icon-active" src="@/assets/icons/friends-icon-active.svg" alt="Friends Icon Active">
+        </div>
+        <div>
+            <img :class="{hidden: activeNavItem === 'profile'}" class="navbar-icon" src="@/assets/icons/profile-icon-white.svg" alt="Profile Icon">
+            <img :class="{visible: activeNavItem === 'profile'}" class="navbar-icon navbar-icon-active" src="@/assets/icons/profile-icon-active.svg" alt="Profile Icon Active">
+        </div>
+
+    </div>
+</template>
+
+<style lang="scss" scoped>
+.navbar{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: pink;
+    padding: 0 1rem;
+
+    .navbar-icon{
+        &.hidden{
+            display: none;
+        }
+    }
+
+    .navbar-icon-active{
+        display: none;
+
+        &.visible{
+            display: block;
+        }
+    }
+
+}
+</style>

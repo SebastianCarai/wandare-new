@@ -23,6 +23,7 @@
   "description": "",
   "devDependencies": {
     "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.5.2",
     "dotenv": "^17.2.2",
@@ -32,12 +33,15 @@
     "nodemon": "^3.1.10",
     "npm": "^11.6.0",
     "prettier": "^3.6.2",
+    "ts-loader": "^9.5.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },
   "dependencies": {
     "@kinde-oss/kinde-node-express": "^1.6.0",
     "@kinde-oss/kinde-typescript-sdk": "^2.13.0",
-    "cookie-parser": "^1.4.7"
+    "@supabase/supabase-js": "^2.57.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5"
   }
 }
