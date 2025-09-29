@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   activeNavItem: string
 }>();
 </script>
@@ -40,6 +40,7 @@ const props = defineProps<{
     height: 80px;
     background-color: pink;
     padding: 0 1rem;
+    z-index: 100;
 
     .navbar-icon{
         &.hidden{

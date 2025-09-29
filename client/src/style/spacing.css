@@ -1,0 +1,34 @@
+/* Flex Gaps */
+.gap-8{
+    row-gap: 0.5rem;
+    column-gap: 0.5rem;
+}
+.gap-16{
+    row-gap: 1rem;
+    column-gap: 1rem;
+}
+
+/* Margins */
+.m-t-4{
+    margin-top: 0.25rem;
+}
+.m-t-8{
+    margin-top: 0.5rem;
+}
+.m-t-16{
+    margin-top: 1rem;
+}
+.m-t-40{
+    margin-top: 2.5rem;
+}
+
+
+.m-b-4{
+    margin-bottom: 0.25rem;
+}
+.m-b-8{
+    margin-bottom: 0.5rem;
+}
+.m-l-8{
+    margin-left: 0.5rem;
+}
