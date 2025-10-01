@@ -1,4 +1,4 @@
-.post-title{
+.main-title{
     font-family: 'Poppins';
     font-weight: 800;
     font-size: 1.5rem;
@@ -8,7 +8,32 @@
     color: $black;
 }
 
-.post-author{
+.capitalized-title{
+    text-transform: uppercase;
+    font-family: 'Poppins';
+    font-weight: 800;
+    color: $black;
+    font-size: 1rem;
+    letter-spacing: 0.2rem;
+    margin: 0;
+}
+
+.accordion-title{
+    font-family: 'Raleway';
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 100%;
+    color: $black;
+}
+
+.common-text{
+    font-family: 'Raleway';
+    font-size: 0.875rem;
+    line-height: 110%;
+    color: $black;
+}
+
+.gray-text{
     color: $gray;
     font-family: 'Poppins';
     font-weight: 300;
@@ -28,6 +53,8 @@
     font-weight: 400;
     font-size: 0.75rem;
     color: $black;
+    letter-spacing: 0.02rem;
+    line-height: 150%;
 }
 
 a{

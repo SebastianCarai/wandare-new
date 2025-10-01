@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import { VitePWA } from 'vite-plugin-pwa'
 
+
 export default defineConfig({
   plugins: [
     vue(),
@@ -53,5 +54,5 @@ export default defineConfig({
         additionalData: '@use "@/style/variables.scss" as *;'
       }
     }
-  }
+  },
 })

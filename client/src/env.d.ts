@@ -14,5 +14,15 @@ declare module '*.scss' {
   export default content;
 }
 
+declare module 'leaflet' {
+  const L: any
+  export default L
+}
+
+declare module '*.svg' {
+  const content: string
+  export default content
+}
+
 declare module 'swiper/css';
 declare module 'swiper/css/*';

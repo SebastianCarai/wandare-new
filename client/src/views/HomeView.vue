@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Navbar from '@/components/global/Navbar.vue';
 import PostCard from '@/components/global/PostCard.vue';
-import type { Post } from '@/types';
+import type { BasePost } from '@/types';
 
-const posts: Post[] = [
+const posts: BasePost[] = [
     {
         id: 1,
         postTitle: 'Trip to Paris',
