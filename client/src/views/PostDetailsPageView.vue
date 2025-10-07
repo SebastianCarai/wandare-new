@@ -146,19 +146,6 @@ function switchAccordion(accordionItem: string = ''){
 </template>
 
 <style lang="scss" scoped>
-.go-back-button{
-    width: 2.5rem;
-    height: 2.5rem;
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    z-index: 50;
-    background: none;
-    border: none;
-    img{
-        width: 100%;
-    }
-}
 
 .pdp-accordion-item{
     border-top: 1px solid $black;

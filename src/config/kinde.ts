@@ -12,7 +12,8 @@ export const kindeClient = createKindeServerClient(GrantType.AUTHORIZATION_CODE,
 
 
 // Function that returns a sessionManager and reads/stores/deletes cookies
-export function createCookieSessionManager(req: Request, res: Response): SessionManager {
+export function createCookieSessionManager(req: Request, res: Response): SessionManager {  
+
   return {
     // Get cookie value from key
     async getSessionItem(key: string) {

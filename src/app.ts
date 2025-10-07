@@ -1,3 +1,5 @@
+/// <reference path="./custom.d.ts" />
+
 import express from 'express';
 import {Request, Response} from 'express';
 import config from './config/config';

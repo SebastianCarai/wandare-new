@@ -9,6 +9,10 @@
 }
 
 /* Margins */
+.no-margins{
+    margin: 0 !important;
+}
+
 .m-t-4{
     margin-top: 0.25rem !important;
 }
@@ -31,4 +35,15 @@
 }
 .m-l-8{
     margin-left: 0.5rem !important;
+}
+
+
+/* Paddings */
+.p-8{
+    padding: 0.5rem;
+}
+
+.p-y-16{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }

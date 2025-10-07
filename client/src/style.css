@@ -1,5 +1,6 @@
 @import url('./style/spacing.css');
 @import url('./style/text.scss');
+@import url('./style/forms.scss');
 
 :root {
   font-family: 'Montserrat';
@@ -18,4 +19,22 @@
 
 .wandare-full-logo{
   width: 260px;
+}
+
+.go-back-button{
+    width: 2.5rem;
+    height: 2.5rem;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 50;
+    background: none;
+    border: none;
+    img{
+        width: 100%;
+    }
+}
+
+.go-back-button.static{
+    position: static;
 }

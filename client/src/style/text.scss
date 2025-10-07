@@ -1,7 +1,21 @@
+.text-centered{
+    text-align: center;
+}
+
 .main-title{
     font-family: 'Poppins';
     font-weight: 800;
     font-size: 1.5rem;
+    margin: 0;
+    line-height: 110%;
+    letter-spacing: 0.02rem;
+    color: $black;
+}
+
+.form-title{
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-size: 1.25rem;
     margin: 0;
     line-height: 110%;
     letter-spacing: 0.02rem;
@@ -30,6 +44,7 @@
     font-family: 'Raleway';
     font-size: 0.875rem;
     line-height: 110%;
+    letter-spacing: 0.02rem;
     color: $black;
 }
 

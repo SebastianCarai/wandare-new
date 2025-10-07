@@ -1,0 +1,47 @@
+.form-item-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.form-text-input{
+    border: none;
+    border-bottom: 1px solid $black;
+    padding-left: 0.5rem;
+    font-family: 'Raleway';
+    font-weight: 400;
+    font-size: 1rem;
+    color: $black;
+    // letter-spacing: 0.02rem;
+
+    &:focus-visible{
+        outline: none;
+    }
+}
+
+
+.file-label{
+    width: calc(50% - 0.5rem);
+    aspect-ratio: 1/1;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed $black;
+
+    &:hover{
+        cursor: pointer;
+        border: 2px dashed $mainColor;
+    }
+
+    &:hover i {
+        color: $mainColor;
+    }
+}
+
+.file-label.white{
+    border-color: $white;
+
+    i{
+        color: $white;
+    }
+}
