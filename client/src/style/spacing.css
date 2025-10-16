@@ -22,6 +22,9 @@
 .m-t-16{
     margin-top: 1rem !important;
 }
+.m-t-24{
+    margin-top: 1.5rem !important;
+}
 .m-t-40{
     margin-top: 2.5rem !important;
 }
@@ -36,14 +39,23 @@
 .m-l-8{
     margin-left: 0.5rem !important;
 }
+.m-l-16{
+    margin-left: 1rem;
+}
 
 
 /* Paddings */
 .p-8{
     padding: 0.5rem;
 }
-
+.p-16{
+    padding: 1rem;
+}
 .p-y-16{
     padding-top: 1rem;
     padding-bottom: 1rem;
+}
+.p-x-16{
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
 }

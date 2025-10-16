@@ -9,10 +9,15 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'service-worker.js',
+      injectRegister: 'auto',
       manifest: {
+        start_url: '/',
+        scope: '/',
         name: 'Wandare',
         short_name: 'Wandare',
-        start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#4DBA87',
@@ -24,7 +29,7 @@ export default defineConfig({
       workbox: {
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/your-api\.domain\.com\/.*$/,
+            urlPattern: /^https:\/\/wandare\.io\/.*$/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',

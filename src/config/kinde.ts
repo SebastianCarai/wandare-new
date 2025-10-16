@@ -16,16 +16,17 @@ export function createCookieSessionManager(req: Request, res: Response): Session
 
   return {
     // Get cookie value from key
-    async getSessionItem(key: string) {
+    async getSessionItem(key: string) 
+    {       
       const value = req.cookies[key];
       return value ? JSON.parse(value) : null;
     },
     // Save cookie
-    async setSessionItem(key: string, value: unknown) {
+    async setSessionItem(key: string, value: unknown) {      
       res.cookie(key, JSON.stringify(value), {
         httpOnly: true,   // protect from JS access
-        // secure: process.env.NODE_ENV === "production", // only over https
-        sameSite: "lax",  // CSRF protection
+        secure: true, // only over https
+        sameSite: "none",  // CSRF protection
         path: "/",
         maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
       });

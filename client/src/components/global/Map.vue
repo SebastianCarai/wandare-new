@@ -48,11 +48,9 @@ const toggleMapFullScreen = function(){
             <LMarker :latLng="stage.coordinates">
 
                 <LIcon>
-                    <img 
-                        style="width: 28px; height: 33px; position: relative; right: 9px; bottom: 250%;" 
-                        :src="stage.type === 'poi' ? '/src/assets/icons/poi-marker-icon.svg' : '/src/assets/icons/accomodation-marker-icon.svg'" 
-                        :alt="stage.stageName"
-                    >
+                    <img v-if="stage.type === 'poi'" class="map-marker" src="@/assets/icons/poi-marker-icon.svg"  :alt="stage.stageName">
+                    <img v-if="stage.type === 'restaurant'" class="map-marker" src="@/assets/icons/restaurant-marker-icon.svg"  :alt="stage.stageName">
+                    <img v-if="stage.type === 'accomodation'" class="map-marker" src="@/assets/icons/accomodation-marker-icon.svg"  :alt="stage.stageName">
                 </LIcon>
 
                 <!-- Marker popup, populated with stag content -->
@@ -131,6 +129,18 @@ const toggleMapFullScreen = function(){
         margin: 1rem 0 0 0;
         min-width: 320px;
     }
+}
+
+.map-marker{
+    height: 40px;
+    position: relative;
+    right: 11px;
+    bottom: 325%;
+}
+
+.leaflet-marker-icon.leaflet-div-icon.leaflet-zoom-animated.leaflet-interactive{
+    border: none !important;
+    background: none !important;
 }
 </style>
 

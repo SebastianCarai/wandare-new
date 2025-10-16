@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Image } from '@/types';
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination } from 'swiper/modules';
@@ -8,7 +7,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 withDefaults(defineProps<{
-  images: Image[],
+  images: string[],
   isFullScreen?: boolean 
 }>(), {
     isFullScreen : false
@@ -25,7 +24,7 @@ withDefaults(defineProps<{
         :class="{'full-screen' : isFullScreen}"
     >
         <SwiperSlide class="post-card-slide" v-for="(image, index) in images" :key="index">
-            <img :src="image.url" .alt="image.altText">
+            <img :src="image" .alt="image">
         </SwiperSlide>
     </Swiper>
 </template>

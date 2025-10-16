@@ -2,6 +2,10 @@
     text-align: center;
 }
 
+.text-white{
+    color: $white !important;
+}
+
 .main-title{
     font-family: 'Poppins';
     font-weight: 800;
@@ -20,6 +24,7 @@
     line-height: 110%;
     letter-spacing: 0.02rem;
     color: $black;
+
 }
 
 .capitalized-title{
@@ -43,7 +48,7 @@
 .common-text{
     font-family: 'Raleway';
     font-size: 0.875rem;
-    line-height: 110%;
+    line-height: 125%;
     letter-spacing: 0.02rem;
     color: $black;
 }
@@ -74,4 +79,16 @@
 
 a{
     text-decoration: none !important;
+}
+
+.default-button{
+    color: $white;
+    background-color: $mainColor;
+    font-family: 'Raleway';
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08rem;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    box-sizing: border-box;
 }

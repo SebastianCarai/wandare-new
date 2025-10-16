@@ -7,17 +7,11 @@ import { ref } from 'vue';
 
 const post: Post = {
     id: 1,
-    postTitle: 'Trip in Paris',
-    postAuthor: 'Sebastian Carai',
+    title: 'Trip in Paris',
+    author: 'Sebastian Carai',
     images: [
-        {
-            url: 'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            altText: 'Senna and Eiffel Tower'
-        },
-        {
-            url: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            altText: 'Bridge and Senna'
-        }
+        'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
     ],
     duration: '3 days',
     stages: [
@@ -28,14 +22,19 @@ const post: Post = {
             stageDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             coordinates: [48.858370, 2.294481],
             images: [
-                {
-                    url: 'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    altText: 'Senna and Eiffel Tower'
-                },
-                {
-                    url: 'https://images.unsplash.com/photo-1603378995290-8d4ce0495ddd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    altText: 'Arco di Trionfo'
-                }
+                'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                'https://images.unsplash.com/photo-1603378995290-8d4ce0495ddd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+            ]
+        },
+        {
+            id: 1,
+            type: 'restaurant',
+            stageName: 'Little Apple',
+            stageDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            coordinates: [48.862397784237004, 2.3628788817945514],
+            images: [
+                'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                'https://images.unsplash.com/photo-1603378995290-8d4ce0495ddd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
             ]
         },
         {
@@ -45,19 +44,13 @@ const post: Post = {
             stageDescription: 'Largo',
             coordinates: [48.873756, 2.294946],
             images: [
-                {
-                    url: 'https://images.unsplash.com/photo-1603378995290-8d4ce0495ddd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    altText: 'Arco di Trionfo'
-                },
-                {
-                    url: 'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    altText: 'Senna and Eiffel Tower'
-                }
+                'https://images.unsplash.com/photo-1603378995290-8d4ce0495ddd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
             ]
         }
     ],
     description: 'bla bla',
-    whatToWear: 'bla bla bla',
+    whatToBring: 'bla bla bla',
     pricing: 'gratis',
     documents: 'nessuno'
 }
@@ -93,7 +86,7 @@ function switchAccordion(accordionItem: string = ''){
     <div class="view-container m-t-16">
 
         <!-- Post title and post author -->
-        <h2 class="main-title">{{ post.postTitle }}</h2>
+        <h2 class="main-title">{{ post.title }}</h2>
         <div class="gray-text m-t-8">
             A <span class="post-duration">{{ post.duration }}</span> trip 
         </div>
@@ -116,10 +109,10 @@ function switchAccordion(accordionItem: string = ''){
 
                 <div class="pdp-accordion-item" :class="{open : isAccordionOpen && activeAccordionItem === 'what-to-wear'}">
                     <div @click="switchAccordion('what-to-wear')" class="pdp-accordion-header d-flex justify-content-between align-items-center">
-                        <div class="accordion-title">What to Wear</div>
+                        <div class="accordion-title">What to Bring</div>
                         <img src="@/assets/icons/chevron-circle-icon-black.svg" aria-hidden="true">
                     </div>
-                    <div  class="pdp-accordion-body common-text">{{ post.whatToWear }}</div>
+                    <div  class="pdp-accordion-body common-text">{{ post.whatToBring }}</div>
                 </div>
 
                 <div class="pdp-accordion-item" :class="{open : isAccordionOpen && activeAccordionItem === 'pricing'}" >

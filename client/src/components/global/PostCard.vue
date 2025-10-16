@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { BasePost } from '@/types';
+import type { Post } from '@/types';
 import Slider from './Slider.vue';
 
 defineProps<{
-  post: BasePost
+  post: Post
 }>();
 </script>
 
@@ -11,10 +11,10 @@ defineProps<{
     <div class="post-card m-t-40">
         <!-- Title and author -->
         <div>
-            <a href="/posts/2">
-                <h2 class="main-title">{{ post.postTitle }}</h2>
-            </a>
-            <h5 class="gray-text">{{ post.postAuthor }}</h5>
+            <router-link to="/posts/2">
+                <h2 class="main-title">{{ post.title }}</h2>
+            </router-link>
+            <h5 class="gray-text">{{ post.author }}</h5>
         </div>
 
         <!-- Image slider and CTAs -->

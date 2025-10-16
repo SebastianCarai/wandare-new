@@ -1,3 +1,4 @@
+// Generate random string
 export function generateRandomString(length: number) : string {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -49,3 +50,7 @@ export async function resizeWithPica(file: File, maxSize = 1000, quality = 0.8):
 
     return new File([blob], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' });
 }
+
+
+
+

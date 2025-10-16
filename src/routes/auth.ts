@@ -24,34 +24,39 @@ router.get("/register", async (req, res) => {
   return res.redirect(registerUrl.toString());
 });
 
-router.get('/test', authWithUserProfile, async (req, res) => {
-  const sessionManager = createCookieSessionManager(req, res);
-  const isAuthenticated = await kindeClient.isAuthenticated(sessionManager);
-  const profile = await kindeClient.getUserProfile(sessionManager);
-
-  
-  res.sendStatus(200);
-})
-
-
 
 // Callback after login
-router.get("/callback", async (req, res, next) => {
-    try {
+router.get('/callback', async (req, res) => {
+  try {
     const sessionManager = createCookieSessionManager(req, res);
 
-    const url = new URL(`${req.protocol}://${req.get("host")}${req.url}`);    
+    // Construct URL using x-forwarded-proto if behind proxy
+    const protocol = req.get('x-forwarded-proto') || req.protocol;
+    const callbackUrl = new URL(req.originalUrl, `${protocol}://${req.get('host')}`);
 
-    // Kinde will automatically processes the auth response 
-    // and store tokens in the session as cookies
-    await kindeClient.handleRedirectToApp(sessionManager, url);
+    await kindeClient.handleRedirectToApp(sessionManager, callbackUrl);
 
-    // Redirect to homepage
-    res.redirect("/");
-    } catch (err) {
-        console.error('Error while handling callback', err);
-        res.status(500).json({message: 'Error while loggin in'});
+    res.redirect('/?logged_in=true');
+  } catch (err) {
+    console.error('❌ Error in /api/callback:', err);
+    res.status(500).send('Login failed');
+  }
+});
+
+router.get('/status', async (req, res) => {  
+  try {
+    const sessionManager = createCookieSessionManager(req, res);
+    const isAuthenticated = await kindeClient.isAuthenticated(sessionManager);
+
+    if(isAuthenticated){
+      return res.json({ isAuthenticated : true });
     }
+    
+    res.json({ isAuthenticated : false });
+
+  } catch (error) {
+    res.json({ isAuthenticated : false });
+  }
 });
 
 // Handle logout

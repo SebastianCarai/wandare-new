@@ -5,12 +5,15 @@ import PostDetailsPageView from "@/views/PostDetailsPageView.vue";
 import Step1 from "@/views/create-post/Step1.vue";
 import Step2 from "@/views/create-post/Step2.vue";
 import Step3 from "@/views/create-post/Step3.vue";
+import LoginView from '@/views/Login.vue';
+import axios from "axios";
+import { useStore } from "vuex";
 
 // Define your routes with strong typing
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
+    name: 'Home',
     component: HomeView
   },
   {
@@ -32,13 +35,36 @@ const routes: Array<RouteRecordRaw> = [
     path: '/create-post/step-3',
     name: 'Create Post | Step 3',
     component: Step3
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginView
   }
-
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes
+  history: createWebHistory(),
+  routes
+})
+
+
+router.beforeEach(async (to) => {
+  const store = useStore();
+
+  if(!store.state.isAuthenticated){
+    if(to.name === 'Login') return true;
+
+    const response = await axios.get('/api/status');
+
+    if(!response.data.isAuthenticated){
+      return { name: 'Login' };
+    }else{
+      store.commit('setAuthStatus', true);
+    }
+  }else{
+    return true
+  }
 })
 
 export default router

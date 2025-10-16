@@ -6,31 +6,34 @@ export type Image = {
 };
 
 export interface Stage{
-    id : number,
-    type: 'poi' | 'accomodation',
+    id: number
+    type: 'poi' | 'restaurant' | 'accomodation',
     stageName: string,
     stageDescription?: string,
     coordinates: Coordinates,
-    images: Image[]
+    images: string[]
 };
+
+export interface newStage{
+    type: 'poi' | 'restaurant' | 'accomodation',
+    stageName: string,
+    stageDescription?: string,
+    coordinates: Coordinates,
+    images: File[]
+}
 
 export interface BasePost{
     id: number,
-    postTitle: string,
-    postAuthor: string,
-    images: Image[],
+    title: string,
+    author: string,
+    images: string[],
     duration: string
 };
 
 export interface Post extends BasePost{
-    id: number,
-    postTitle: string,
-    postAuthor: string,
-    images: Image[] | [],
-    duration: string,
     stages: Stage[],
     description?: string,
-    whatToWear?: string,
+    whatToBring?: string,
     pricing?: string,
     documents?: string
 };
