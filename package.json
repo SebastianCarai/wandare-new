@@ -5,9 +5,9 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/app.ts",
-    "lint": "eslint 'src/**/*.ts'",
-    "devStart": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/app.ts & cd ./client && npm run dev"
+    "dev": "nodemon --watch 'server/**/*.ts' --exec 'ts-node' server/app.ts",
+    "lint": "eslint 'server/**/*.ts'",
+    "devStart": "nodemon --watch 'server/**/*.ts' --exec 'ts-node' server/app.ts & cd ./client && npm run dev"
   },
   "repository": {
     "type": "git",
