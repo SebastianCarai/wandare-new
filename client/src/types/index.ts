@@ -14,7 +14,7 @@ export interface Stage{
     images: string[]
 };
 
-export interface newStage{
+export interface Newstage{
     type: 'poi' | 'restaurant' | 'accomodation',
     stageName: string,
     stageDescription?: string,

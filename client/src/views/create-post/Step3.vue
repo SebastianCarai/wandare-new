@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import Navbar from '@/components/global/Navbar.vue';
 import { useStore } from 'vuex';
-import {ref} from 'vue'
+import {ref} from 'vue';
+import axios from 'axios';
+import { createPostFormData } from '@/functions/functions';
 
 const store = useStore();
 
@@ -18,8 +20,19 @@ const createPost = function(){
         documents: documents.value
     });
 
-    console.log(store.state.newPost);
-    
+    // Create formdata to send to the server from the store state with newPost data
+
+    const formData = createPostFormData(store.state.newPost);
+
+    axios.post('/api/posts/create-post', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    .then((res) => {
+        console.log(res);
+        
+    })
 }
 </script>
 

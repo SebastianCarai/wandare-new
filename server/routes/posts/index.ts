@@ -1,6 +1,7 @@
 import { Router, Request, Response} from "express";
 import { Post } from "../../types";
 import test from "node:test";
+import postRoutes from "./post-routes";
 
 const router = Router();
 
@@ -88,5 +89,8 @@ router.get('/', async(req: Request, res: Response) => {
         posts: testPosts
     })
 })
+
+// Add post routes to the router
+router.use('/', postRoutes);
 
 export default router;

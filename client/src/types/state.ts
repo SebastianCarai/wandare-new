@@ -1,4 +1,4 @@
-import type { newStage } from "./index"
+import type { Newstage } from "./index"
 
 
 export interface FirstStep{
@@ -8,7 +8,7 @@ export interface FirstStep{
 };
 
 export interface SecondStep{
-    stages: newStage[]
+    stages: Newstage[]
 };
 
 export interface ThirdStep{

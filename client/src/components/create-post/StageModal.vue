@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { newStage } from '@/types';
+import type { Newstage } from '@/types';
 import VueGoogleAutocomplete from "vue-google-autocomplete";
 import ImageCropper from './ImageCropper.vue';
 import { useStore } from 'vuex';
@@ -11,7 +11,7 @@ const modalHeader = ref<string>('Choose Stage Type');
 
 const store = useStore();
 
-const stage = ref<newStage>({
+const stage = ref<Newstage>({
     type: 'poi',
     stageName: '',
     stageDescription: '',

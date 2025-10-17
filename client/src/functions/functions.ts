@@ -18,10 +18,10 @@ export async function resizeWithPica(file: File, maxSize = 1000, quality = 0.8):
     const img = await new Promise<HTMLImageElement>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = e => {
-        const image = new Image();
-        image.onload = () => resolve(image);
-        image.onerror = reject;
-        image.src = e.target!.result as string;
+            const image = new Image();
+            image.onload = () => resolve(image);
+            image.onerror = reject;
+            image.src = e.target!.result as string;
         };
         reader.onerror = reject;
         reader.readAsDataURL(file);
@@ -49,6 +49,40 @@ export async function resizeWithPica(file: File, maxSize = 1000, quality = 0.8):
     const blob = await pica.toBlob(destCanvas, 'image/jpeg', quality);
 
     return new File([blob], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' });
+}
+
+import type { NewPost } from '@/types/state';
+import type { Newstage } from '@/types/index'
+
+export const createPostFormData = (post: NewPost): FormData => {
+    const formData = new FormData();
+    
+
+    for (const [key, value] of Object.entries(post)){
+        if(key !== 'images' && key !== 'stages'){
+            formData.append(key, value as string)
+        }
+    }
+
+    post.images.forEach(image => {
+        formData.append('postImages', image)
+    });
+
+    post.stages.forEach((stage: Newstage, index: number) => {        
+
+        formData.append(`stageData_${index}`, JSON.stringify({
+            type: stage.type,
+            stageName: stage.stageName,
+            stageDescription: stage.stageDescription,
+            coordinates: stage.coordinates
+        }));
+
+        stage.images.forEach(image => {
+            formData.append(`stageImages${index}`, image);
+        });
+    });
+
+    return formData;
 }
 
 
