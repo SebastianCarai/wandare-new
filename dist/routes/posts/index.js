@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const post_routes_1 = __importDefault(require("./post-routes"));
 const router = (0, express_1.Router)();
 router.get('/', async (req, res) => {
     const testPosts = [
@@ -27,7 +31,7 @@ router.get('/', async (req, res) => {
                 },
                 {
                     id: 2,
-                    type: 'accomodation',
+                    type: 'accommodation',
                     name: 'Arco di Trionfo',
                     description: 'Largo',
                     coordinates: [48.873756, 2.294946],
@@ -65,7 +69,7 @@ router.get('/', async (req, res) => {
                 },
                 {
                     id: 2,
-                    type: 'accomodation',
+                    type: 'accommodation',
                     name: 'Arco di Trionfo',
                     description: 'Largo',
                     coordinates: [48.873756, 2.294946],
@@ -85,4 +89,6 @@ router.get('/', async (req, res) => {
         posts: testPosts
     });
 });
+// Add post routes to the router
+router.use('/', post_routes_1.default);
 exports.default = router;

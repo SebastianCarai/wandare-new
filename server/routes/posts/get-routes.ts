@@ -1,0 +1,49 @@
+import Router, { Request, Response } from 'express';
+import { supabase } from '../../app';
+import type { Post } from '../../types';
+import { authWithUserProfile } from '../../middlewares/basicAuth';
+import { PostApiSchema } from '../../types/zod-schemas';
+
+const router = Router();
+
+router.get('/', authWithUserProfile,  async(req: Request, res: Response) => {
+
+    const {data: postsFeed, error: postDetailsError} = await supabase
+    .from('posts')
+    .select()
+    .neq('author_id', req.profile?.id)
+    .limit(9)
+
+    if(postDetailsError){
+        console.error(postDetailsError);
+        throw new Error('Error while fetching from supabase')
+    }
+
+    res.json(postsFeed)
+})
+
+// Post details route
+router.get('/:id', async(req: Request, res: Response) => {
+
+    const id : number = parseInt(req.params.id as string);
+
+    const {data, error: postDetailsError} = await supabase
+    .from('posts')
+    .select(`*, stages(*)`)
+    .eq('id', id)
+    .single()
+
+    if(!data) return res.status(404).json({message: 'Post not found'});
+
+    const parsedFinalPost = PostApiSchema.safeParse(data);    
+
+    if(postDetailsError){
+        console.error('Supabase post details fetching error: ', postDetailsError);
+        return res.status(500).json({message: 'Post not found'});
+    }
+
+    res.status(200).json(parsedFinalPost);
+})
+
+
+export default router

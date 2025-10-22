@@ -19,7 +19,7 @@ const stage = ref<Newstage>({
     images:[]
 });
 
-const setStageType = function(type: 'poi' | 'restaurant' | 'accomodation'){
+const setStageType = function(type: 'poi' | 'restaurant' | 'accommodation'){
     stage.value.type = type;
     stageFormStep.value = 2;
     modalHeader.value = 'Stage detials'
@@ -88,9 +88,9 @@ const saveStage = function(){
                 <div class="form-title text-white">Restaurant</div>
             </div>
 
-            <div class="stage-type-button" @click="setStageType('accomodation')">
-                <img src="@/assets/icons/accomodation-icon-white.svg" aria-hidden="true">
-                <div class="form-title text-white">Accomodation</div>
+            <div class="stage-type-button" @click="setStageType('accommodation')">
+                <img src="@/assets/icons/accommodation-icon-white.svg" aria-hidden="true">
+                <div class="form-title text-white">accommodation</div>
             </div>
         </div>
 

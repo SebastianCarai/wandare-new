@@ -4,23 +4,23 @@ export type Image = {
     url: string,
     altText?: string,
 };
+export interface Newstage{
+    type: 'poi' | 'restaurant' | 'accommodation',
+    stageName: string,
+    stageDescription?: string,
+    coordinates: Coordinates,
+    images: File[]
+}
 
 export interface Stage{
     id: number
-    type: 'poi' | 'restaurant' | 'accomodation',
+    type: 'poi' | 'restaurant' | 'accommodation',
     stageName: string,
     stageDescription?: string,
     coordinates: Coordinates,
     images: string[]
 };
 
-export interface Newstage{
-    type: 'poi' | 'restaurant' | 'accomodation',
-    stageName: string,
-    stageDescription?: string,
-    coordinates: Coordinates,
-    images: File[]
-}
 
 export interface BasePost{
     id: number,

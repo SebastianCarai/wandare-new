@@ -29,7 +29,6 @@ router.get('/callback', async (req, res) => {
         // Construct URL using x-forwarded-proto if behind proxy
         const protocol = req.get('x-forwarded-proto') || req.protocol;
         const callbackUrl = new URL(req.originalUrl, `${protocol}://${req.get('host')}`);
-        console.log('Callback URL:', callbackUrl.toString());
         await kinde_1.kindeClient.handleRedirectToApp(sessionManager, callbackUrl);
         res.redirect('/?logged_in=true');
     }

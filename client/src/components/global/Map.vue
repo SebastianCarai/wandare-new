@@ -50,7 +50,7 @@ const toggleMapFullScreen = function(){
                 <LIcon>
                     <img v-if="stage.type === 'poi'" class="map-marker" src="@/assets/icons/poi-marker-icon.svg"  :alt="stage.stageName">
                     <img v-if="stage.type === 'restaurant'" class="map-marker" src="@/assets/icons/restaurant-marker-icon.svg"  :alt="stage.stageName">
-                    <img v-if="stage.type === 'accomodation'" class="map-marker" src="@/assets/icons/accomodation-marker-icon.svg"  :alt="stage.stageName">
+                    <img v-if="stage.type === 'accommodation'" class="map-marker" src="@/assets/icons/accommodation-marker-icon.svg"  :alt="stage.stageName">
                 </LIcon>
 
                 <!-- Marker popup, populated with stag content -->

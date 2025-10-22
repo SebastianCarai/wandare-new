@@ -11,6 +11,8 @@ onBeforeMount(async() => {
     try {
         axios.get('/api/posts')
         .then(res => {
+            console.log(res);
+            
             posts.value = res.data.posts;
         })        
     } catch (error) {

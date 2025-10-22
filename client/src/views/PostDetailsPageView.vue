@@ -3,57 +3,25 @@ import Map from '@/components/global/Map.vue';
 import Navbar from '@/components/global/Navbar.vue';
 import Slider from '@/components/global/Slider.vue';
 import type { Post } from '@/types';
-import { ref } from 'vue';
+import axios from 'axios';
+import { onBeforeMount, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
-const post: Post = {
-    id: 1,
-    title: 'Trip in Paris',
-    author: 'Sebastian Carai',
-    images: [
-        'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-    ],
-    duration: '3 days',
-    stages: [
-        {
-            id: 1,
-            type: 'poi',
-            stageName: 'Eiffel Tower',
-            stageDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            coordinates: [48.858370, 2.294481],
-            images: [
-                'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                'https://images.unsplash.com/photo-1603378995290-8d4ce0495ddd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-            ]
-        },
-        {
-            id: 1,
-            type: 'restaurant',
-            stageName: 'Little Apple',
-            stageDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-            coordinates: [48.862397784237004, 2.3628788817945514],
-            images: [
-                'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                'https://images.unsplash.com/photo-1603378995290-8d4ce0495ddd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-            ]
-        },
-        {
-            id: 2,
-            type: 'accomodation',
-            stageName: 'Arco di Trionfo',
-            stageDescription: 'Largo',
-            coordinates: [48.873756, 2.294946],
-            images: [
-                'https://images.unsplash.com/photo-1603378995290-8d4ce0495ddd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                'https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-            ]
-        }
-    ],
-    description: 'bla bla',
-    whatToBring: 'bla bla bla',
-    pricing: 'gratis',
-    documents: 'nessuno'
-}
+const post = ref<Post>();
+const isLoading = ref<boolean>(true);
+
+
+onBeforeMount(async() => {
+    const router = useRoute();
+
+    const postId = router.params.id;
+
+    const postDetails = await axios.get(`/api/posts/${postId}`);
+    
+    post.value = postDetails.data.data;
+    isLoading.value = false;
+})
+
 
 // activeAccordionItem keeps track of which item of the accordion is open (one per time)
 // isAccordionOpen checks if any accordion item is open (needed when a user open and than closes the same item)
@@ -76,65 +44,72 @@ function switchAccordion(accordionItem: string = ''){
 </script>
 
 <template>
-    <!-- Image Slider -->
-    <Slider :isFullScreen="true" :images="post.images" />
-
-    <button type="button" @click="$router.go(-1)" class="go-back-button" aria-label="Go back to the previous page">
-        <img src="@/assets/icons/go-back-icon.svg" aria-hidden="true">
-    </button>
-
-    <div class="view-container m-t-16">
-
-        <!-- Post title and post author -->
-        <h2 class="main-title">{{ post.title }}</h2>
-        <div class="gray-text m-t-8">
-            A <span class="post-duration">{{ post.duration }}</span> trip 
-        </div>
-
-        <!-- Map -->
-        <Map :stages="post.stages" />
-
-        <!-- Accordion -->
-        <div class="m-t-40">
-            <h4 class="capitalized-title">More information</h4>
-
-            <div class="pdp-accordion m-t-8 d-flex flex-column gap-16">
-                <div @click="switchAccordion('description')" class="pdp-accordion-item" :class="{open : isAccordionOpen && activeAccordionItem === 'description'}">
-                    <div class="pdp-accordion-header d-flex justify-content-between align-items-center">
-                        <div class="accordion-title">Description</div>
-                        <img src="@/assets/icons/chevron-circle-icon-black.svg" aria-hidden="true">
-                    </div>
-                    <div class="pdp-accordion-body common-text">{{ post.description }}</div>
+    <div>
+        <div v-if="post && !isLoading">
+            <!-- Image Slider -->
+            <Slider v-if="!isLoading" :isFullScreen="true" :images="post.images" />
+        
+            <button type="button" @click="$router.go(-1)" class="go-back-button" aria-label="Go back to the previous page">
+                <img src="@/assets/icons/go-back-icon.svg" aria-hidden="true">
+            </button>
+        
+            <div class="view-container m-t-16">
+        
+                <!-- Post title and post author -->
+                <h2 class="main-title">{{ post.title }}</h2>
+                <div class="gray-text m-t-8">
+                    A <span class="post-duration">{{ post.duration }}</span> trip 
                 </div>
-
-                <div class="pdp-accordion-item" :class="{open : isAccordionOpen && activeAccordionItem === 'what-to-wear'}">
-                    <div @click="switchAccordion('what-to-wear')" class="pdp-accordion-header d-flex justify-content-between align-items-center">
-                        <div class="accordion-title">What to Bring</div>
-                        <img src="@/assets/icons/chevron-circle-icon-black.svg" aria-hidden="true">
+        
+                <!-- Map -->
+                <Map v-if="!isLoading" :stages="post.stages" />
+        
+                <!-- Accordion -->
+                <div class="m-t-40" v-if="post?.description || post?.whatToBring || post?.pricing || post?.documents">
+                    <h4 class="capitalized-title">More information</h4>
+        
+                    <div class="pdp-accordion m-t-8 d-flex flex-column gap-16">
+                        <div v-if="post?.description" @click="switchAccordion('description')" class="pdp-accordion-item" :class="{open : isAccordionOpen && activeAccordionItem === 'description'}">
+                            <div class="pdp-accordion-header d-flex justify-content-between align-items-center">
+                                <div class="accordion-title">Description</div>
+                                <img src="@/assets/icons/chevron-circle-icon-black.svg" aria-hidden="true">
+                            </div>
+                            <div class="pdp-accordion-body common-text">{{ post.description }}</div>
+                        </div>
+        
+                        <div v-if="post?.whatToBring" class="pdp-accordion-item" :class="{open : isAccordionOpen && activeAccordionItem === 'what-to-wear'}">
+                            <div @click="switchAccordion('what-to-wear')" class="pdp-accordion-header d-flex justify-content-between align-items-center">
+                                <div class="accordion-title">What to Bring</div>
+                                <img src="@/assets/icons/chevron-circle-icon-black.svg" aria-hidden="true">
+                            </div>
+                            <div  class="pdp-accordion-body common-text">{{ post.whatToBring }}</div>
+                        </div>
+        
+                        <div v-if="post?.pricing" class="pdp-accordion-item" :class="{open : isAccordionOpen && activeAccordionItem === 'pricing'}" >
+                            <div @click="switchAccordion('pricing')" class="pdp-accordion-header d-flex justify-content-between align-items-center">
+                                <div class="accordion-title">Pricing</div>
+                                <img src="@/assets/icons/chevron-circle-icon-black.svg" aria-hidden="true">
+                            </div>
+                            <div class="pdp-accordion-body common-text">{{ post.pricing }}</div>
+                        </div>
+        
+        
+                        <div v-if="post?.documents" class="pdp-accordion-item" :class="{open : isAccordionOpen && activeAccordionItem === 'documents'}">
+                            <div @click="switchAccordion('documents')" class="pdp-accordion-header d-flex justify-content-between align-items-center">
+                                <div class="accordion-title">Documents required</div>
+                                <img src="@/assets/icons/chevron-circle-icon-black.svg" aria-hidden="true">
+                            </div>
+                            <div class="pdp-accordion-body common-text">{{ post.documents }}</div>
+                        </div>
                     </div>
-                    <div  class="pdp-accordion-body common-text">{{ post.whatToBring }}</div>
                 </div>
-
-                <div class="pdp-accordion-item" :class="{open : isAccordionOpen && activeAccordionItem === 'pricing'}" >
-                    <div @click="switchAccordion('pricing')" class="pdp-accordion-header d-flex justify-content-between align-items-center">
-                        <div class="accordion-title">Pricing</div>
-                        <img src="@/assets/icons/chevron-circle-icon-black.svg" aria-hidden="true">
-                    </div>
-                    <div class="pdp-accordion-body common-text">{{ post.pricing }}</div>
-                </div>
-
-
-                <div class="pdp-accordion-item" :class="{open : isAccordionOpen && activeAccordionItem === 'documents'}">
-                    <div @click="switchAccordion('documents')" class="pdp-accordion-header d-flex justify-content-between align-items-center">
-                        <div class="accordion-title">Documents required</div>
-                        <img src="@/assets/icons/chevron-circle-icon-black.svg" aria-hidden="true">
-                    </div>
-                    <div class="pdp-accordion-body common-text">{{ post.documents }}</div>
-                </div>
+        
+                <Navbar activeNavItem="none" />
             </div>
         </div>
-
-        <Navbar activeNavItem="none" />
+        <div v-else>
+            Post Not Found
+        </div>
     </div>
 </template>
 

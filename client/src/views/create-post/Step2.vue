@@ -51,7 +51,7 @@ const switchAccordion = function(index : number){
                 <div class="d-flex justify-content-start align-items-center gap-8">
                     <img class="stage-icon" v-if="stage.type == 'poi'" src="@/assets/icons/poi-icon-black.svg" alt="">
                     <img class="stage-icon" v-if="stage.type == 'restaurant'" src="@/assets/icons/restaurant-icon-black.svg" alt="">
-                    <img class="stage-icon" v-if="stage.type == 'accomodation'" src="@/assets/icons/accomodation-icon-black.svg" alt="">
+                    <img class="stage-icon" v-if="stage.type == 'accommodation'" src="@/assets/icons/accommodation-icon-black.svg" alt="">
                     <div class="vertical-divider"></div>
                     <div class="accordion-title">{{ stage.stageName }}</div>
                 </div>

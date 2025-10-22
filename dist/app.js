@@ -23,7 +23,7 @@ exports.app.use((0, cors_1.default)({
 }));
 exports.app.use(express_1.default.json());
 exports.app.use((0, cookie_parser_1.default)());
-exports.app.set("trust proxy", 1);
+exports.app.set("trust proxy", true);
 exports.app.use('/api', auth_1.default);
 exports.app.use('/api/posts', index_1.default);
 // --- Serve Vue static files ---
@@ -34,7 +34,6 @@ exports.app.use(express_1.default.static(distPath));
 exports.app.use((req, res, next) => {
     if (req.path.startsWith('/api'))
         return next();
-    // 🚫 Prevent caching of index.html
     res.setHeader('Cache-Control', 'no-store');
     res.sendFile(path_1.default.join(distPath, "index.html"));
 });
