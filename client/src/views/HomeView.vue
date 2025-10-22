@@ -8,12 +8,13 @@ import axios from 'axios';
 const posts = ref<Post[]>([]);
 
 onBeforeMount(async() => {
+
     try {
         axios.get('/api/posts')
         .then(res => {
             console.log(res);
             
-            posts.value = res.data.posts;
+            posts.value = res.data;
         })        
     } catch (error) {
         console.error(error);

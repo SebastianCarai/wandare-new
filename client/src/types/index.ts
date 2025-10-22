@@ -25,7 +25,8 @@ export interface Stage{
 export interface BasePost{
     id: number,
     title: string,
-    author: string,
+    authorId: string,
+    authorName: string,
     images: string[],
     duration: string
 };

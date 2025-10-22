@@ -7,7 +7,8 @@
     "start": "node dist/app.js",
     "dev": "nodemon --watch 'server/**/*.ts' --exec 'ts-node' server/app.ts",
     "lint": "eslint 'server/**/*.ts'",
-    "devStart": "nodemon --watch 'server/**/*.ts' --exec 'ts-node' server/app.ts & cd ./client && npm run dev"
+    "devStart": "nodemon --watch 'server/**/*.ts' --exec 'ts-node' server/app.ts & cd ./client && npm run dev",
+    "deploy": "./deploy.sh"
   },
   "repository": {
     "type": "git",

@@ -11,10 +11,10 @@ defineProps<{
     <div class="post-card m-t-40">
         <!-- Title and author -->
         <div>
-            <router-link to="/posts/2">
+            <router-link :to="'/posts/'+post.id">
                 <h2 class="main-title">{{ post.title }}</h2>
             </router-link>
-            <h5 class="gray-text">{{ post.author }}</h5>
+            <h5 class="gray-text">{{ post.authorName }}</h5>
         </div>
 
         <!-- Image slider and CTAs -->

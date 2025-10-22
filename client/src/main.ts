@@ -1,13 +1,19 @@
 import { createApp} from 'vue';
 import { store } from './store';
-
 import './style.css'
 import App from './App.vue'
 import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const app = createApp(App);
+import { registerPWA } from './pwa-register';
+registerPWA();
 
+navigator.serviceWorker.addEventListener('controllerchange', () => {
+  // When the new service worker takes control, reload the page
+  window.location.reload();
+});
+
+const app = createApp(App);
 
 app.use(router)
 app.use(store);

@@ -30,5 +30,9 @@ declare module '*.svg' {
   export default content
 }
 
+declare module 'virtual:pwa-register' {
+  export function registerSW(options?: any): any;
+}
+
 declare module 'swiper/css';
 declare module 'swiper/css/*';

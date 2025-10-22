@@ -34,6 +34,15 @@ const BasePostDbSchema = z.object({
     images: z.array(z.string()),
 });
 
+export const BasePostApiSchema = BasePostDbSchema.transform((data) => ({
+    id: data.id,
+    title: data.title,
+    authorId: data.title,
+    authorName: data.author_name,
+    duration: data.duration,
+    images: data.images
+}));
+
 // Full post schema
 const PostDbSchema = BasePostDbSchema.extend({
     stages: z.array(StageApiSchema),

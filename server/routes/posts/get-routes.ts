@@ -2,7 +2,7 @@ import Router, { Request, Response } from 'express';
 import { supabase } from '../../app';
 import type { Post } from '../../types';
 import { authWithUserProfile } from '../../middlewares/basicAuth';
-import { PostApiSchema } from '../../types/zod-schemas';
+import { PostApiSchema, BasePostApiSchema } from '../../types/zod-schemas';
 
 const router = Router();
 
@@ -19,8 +19,14 @@ router.get('/', authWithUserProfile,  async(req: Request, res: Response) => {
         throw new Error('Error while fetching from supabase')
     }
 
-    res.json(postsFeed)
-})
+    // Format the posts based on the BasePostApiSchema and return only what is being properly formatted
+    const formattedPosts = postsFeed
+        .map(post => BasePostApiSchema.safeParse(post))
+        .filter(result => result.success)
+        .map(formattedPost => formattedPost.data)
+
+    res.status(200).json(formattedPosts);
+});
 
 // Post details route
 router.get('/:id', async(req: Request, res: Response) => {
