@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
 import type { RootState, FirstStep } from '@/types/state';
-import type { Newstage } from '@/types';
+import type { Coordinates, Newstage } from '@/types';
 
 export const store = createStore<RootState>({
     state:{
@@ -9,6 +9,8 @@ export const store = createStore<RootState>({
             title: '',
             duration: '',
             images: [],
+            mapCenter: [],
+            mapZoom: 0,
             stages: [],
             description: '',
             whatToBring: '',
@@ -31,8 +33,14 @@ export const store = createStore<RootState>({
         removePreviewThumbnail(state, indexToDelete: number){
             state.newPost.images.splice(indexToDelete, 1)
         },
-        addStage(state, Newstage: Newstage){
-            state.newPost.stages.push(Newstage);
+        addStage(state, newstage: Newstage){
+            state.newPost.stages.push(newstage);
+        },
+        updateMapCenter(state, newCenter: Coordinates){
+            state.newPost.mapCenter = newCenter;
+        },
+        updateMapZoom(state, newZoom: number){
+            state.newPost.mapZoom = newZoom;
         },
         saveThirdStepData(state, thirdStepData: {description?: string, whatToBring?: string, pricing?: string, documents?: string}){
             state.newPost.description = thirdStepData.description || '';

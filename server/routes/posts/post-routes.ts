@@ -39,7 +39,7 @@ class BadImageDimensionsError extends Error {
 router.post('/create-post', authWithUserProfile , upload.any(), async(req: Request, res: Response) => {    
 
     // Get all the images from the files
-    const images = req.files as Express.Multer.File[];    
+    const images = req.files as Express.Multer.File[];        
 
     // Each image has a "fieldname" key which is either 'postImages' (which referes to the post main images),
     // or 'stageImagesX' (that refers to specific images for each stage >> X being the stage's index)
@@ -57,12 +57,17 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
     });
 
     // Get the post data (title, duration, description, etc...)
-    const postData : Record<string, string> = {};
+    const postData : Record<string, string | []> = {};
     for(const [key, value] of Object.entries(req.body)){
         if(!key.startsWith('stageData_')){
-            postData[key] = value as string
+            if(key === 'mapCenter'){
+                postData[key] = JSON.parse("[" + value as string + "]");
+            }else{
+                postData[key] = value as string;
+            }
         }
     }
+    
 
     const bucketName = process.env.BUCKET_NAME;
     const couldfrontUrl = process.env.CLOUDFRONT_URL;
@@ -142,6 +147,8 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
         author_id: req.profile!.id,
         author_name: `${req.profile!.given_name} ${req.profile!.family_name}`,
         images: uploadedPostImages.map(image => image.value.url),
+        map_center: postData.mapCenter,
+        map_zoom: postData.mapZoom,
         duration: postData.duration,
         description: postData.duration,
         what_to_bring: postData.whatToBring,

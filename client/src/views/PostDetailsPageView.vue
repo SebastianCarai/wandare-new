@@ -20,6 +20,9 @@ onBeforeMount(async() => {
     const postDetails = await axios.get(`/api/posts/${postId}`);
     
     post.value = postDetails.data.data;
+
+    console.log(post.value);
+    
     isLoading.value = false;
 })
 
@@ -65,7 +68,7 @@ function switchAccordion(accordionItem: string = ''){
                 </div>
         
                 <!-- Map -->
-                <Map v-if="!isLoading" :stages="post.stages" />
+                <Map :center="post.mapCenter" :zoom="post.mapZoom" v-if="!isLoading" :stages="post.stages" />
         
                 <!-- Accordion -->
                 <div class="m-t-40" v-if="post?.description || post?.whatToBring || post?.pricing || post?.documents">

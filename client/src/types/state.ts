@@ -1,4 +1,4 @@
-import type { Newstage } from "./index"
+import type { Coordinates, Newstage } from "./index"
 
 
 export interface FirstStep{
@@ -8,7 +8,9 @@ export interface FirstStep{
 };
 
 export interface SecondStep{
-    stages: Newstage[]
+    stages: Newstage[],
+    mapCenter: Coordinates | [],
+    mapZoom: number,
 };
 
 export interface ThirdStep{

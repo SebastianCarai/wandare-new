@@ -9,6 +9,10 @@ const stageFormStep = ref<number>(1);
 const isModalOpen = ref<boolean>(false);
 const modalHeader = ref<string>('Choose Stage Type');
 
+defineProps<{
+    isError: boolean
+}>()
+
 const store = useStore();
 
 const stage = ref<Newstage>({
@@ -58,10 +62,11 @@ const saveStage = function(){
 </script>
 
 <template>
-    <div class="add-stage-button m-t-16" aria-label="Add stage" @click="isModalOpen = true">
+    <div :class="{error : isError}" class="add-stage-button m-t-16" aria-label="Add stage" @click="isModalOpen = true">
         <div class="accordion-title">Add stage</div>
         <img src="@/assets/icons/plus-fill-icon-black.svg" alt="">
     </div>
+    <div v-if="isError" class="small-text error-text m-t-4">Add at least one stage</div>
 
     <dialog v-if="isModalOpen" open class="stage-form-modal">
         <!-- Stage Header -->
@@ -142,6 +147,10 @@ const saveStage = function(){
     padding: 1rem;
     border: 1px dashed $black;
     border-radius: 0.5rem;
+
+    &.error{
+        border: 1px dashed red;
+    }
 }
 
 

@@ -7,7 +7,8 @@ import { useStore } from 'vuex';
 const props = defineProps<{
     maxImages: number,
     previews: File[],
-    isWhite?: boolean
+    isWhite?: boolean,
+    isError?: boolean
 }>();
 
 
@@ -129,17 +130,17 @@ const removeThumbnail = function(index : number){
         <!-- Image Input and previews -->
         <div class="d-flex flex-wrap justify-content-center gap-16">
             <!-- Image input -->
-            <label v-if="previews.length < maxImages" class="file-label" :class="{white : isWhite}" for="images">
+            <label v-if="previews.length < maxImages" class="file-label" :class="{white : isWhite, error: isError}" for="images">
                 <img v-if="isWhite" src="@/assets/icons/plus-fill-icon-white.svg" alt="">
                 <img v-if="!isWhite" src="@/assets/icons/plus-fill-icon-gray.svg" alt="">
                 <input @change="getImageData" id="images" type="file" name="images" accept="image/*" required multiple hidden>
             </label>
     
             <!-- Previews -->
-             <div v-if="previewUrls.length > 0" v-for="(image, index) in previewUrls" :key="index" class="image-thumbnail">
-                 <img :src="image" alt="Thumbnail">
-                 <img @click="removeThumbnail(index)" class="remove-thumbnail-icon" src="../../assets/icons/close-icon-white-bg-black-stroke.svg" alt="Remove thumbnail image">
-             </div>
+            <div v-if="previewUrls.length > 0" v-for="(image, index) in previewUrls" :key="index" class="image-thumbnail">
+                <img :src="image" alt="Thumbnail">
+                <img @click="removeThumbnail(index)" class="remove-thumbnail-icon" src="../../assets/icons/close-icon-white-bg-black-stroke.svg" alt="Remove thumbnail image">
+            </div>
         </div>           
     
         <!-- Cropper Modal -->

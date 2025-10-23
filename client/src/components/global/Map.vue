@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer, LMarker, LPopup, LIcon } from "@vue-leaflet/vue-leaflet";
-import type { Stage } from "@/types";
+import type { Coordinates, Stage } from "@/types";
 import { ref, nextTick } from 'vue';
 import Slider from "./Slider.vue";
 
-defineProps<{
-  stages: Stage[]
-}>();
+const props = withDefaults(defineProps<{
+    stages: Stage[],
+    center?: Coordinates,
+    zoom?: number, 
+    hasBorders?: boolean
+}>(), {
+    hasBorders : true
+});
+
+const emit = defineEmits(["updateZoom", "updateCenter"]);
 
 const isMapExpanded = ref<boolean>(false);
 const leafletMap = ref();
@@ -17,24 +24,41 @@ const toggleMapFullScreen = function(){
 
     nextTick(() => {
         leafletMap.value?.leafletObject.invalidateSize();
-    })
+    });
 }
+
+const zoom = ref<number>(props.zoom || 12);
+const center = ref<number[]>(props.center || props.stages[0]?.coordinates!);
+
+const updateCenter = function(newCenter: Record<string, number>){       
+    center.value = [newCenter.lat!, newCenter.lng!];
+    emit('updateCenter', center.value);
+}
+
+const updateZoom = function(newZoom: number){
+    zoom.value = newZoom;
+    emit('updateZoom', zoom.value);
+}
+
+
 </script>
 
 <template>
-  <div class="vue-leaflet-map" :class="{full : isMapExpanded}">
+    <div class="vue-leaflet-map" :class="{full : isMapExpanded, 'm-t-16 m-b-16' : hasBorders}">
 
     <!-- Expand Map Icon >> At click call toggleMapFullScreen() -->
     <div class="expand-map-button" @click="toggleMapFullScreen">
-      <img src="@/assets/icons/expand-icon-black.svg" alt="Expand Map">
+        <img src="@/assets/icons/expand-icon-black.svg" alt="Expand Map">
     </div>
 
     <!-- Leaflet Map -->
     <LMap
-        :center="stages[0]?.coordinates"
+        :center="center as Coordinates"
         :use-global-leaflet="false"
-        :zoom="12"
+        :zoom="zoom"
         ref="leafletMap"
+        @update:center="updateCenter"
+        @update:zoom="updateZoom"
     >
         <LTileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -45,7 +69,7 @@ const toggleMapFullScreen = function(){
 
         <!-- Render markers for each stage -->
         <div v-for="(stage, index) in stages" :key="index">
-            <LMarker :latLng="stage.coordinates">
+            <LMarker :latLng="stage.coordinates as Coordinates">
 
                 <LIcon>
                     <img v-if="stage.type === 'poi'" class="map-marker" src="@/assets/icons/poi-marker-icon.svg"  :alt="stage.stageName">
@@ -75,8 +99,6 @@ const toggleMapFullScreen = function(){
 .vue-leaflet-map{
     height:100%; 
     aspect-ratio: 1/1; 
-    margin-top:16px; 
-    margin-bottom:16px; 
     border-radius: 20px; 
     overflow: hidden; 
     border: 2px solid $black;

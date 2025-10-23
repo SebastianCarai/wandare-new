@@ -41,7 +41,7 @@ const createPost = function(){
         <!-- Create Post Header -->
         <div class="create-post-header">
             <div class="d-flex justify-content-between align-items-center p-y-16">
-                <router-link type="button" to="/create-post/step-1" class="go-back-button static" aria-label="Go back to the previous page">
+                <router-link type="button" to="/create-post/step-2" class="go-back-button static" aria-label="Go back to the previous page">
                     <img src="@/assets/icons/go-back-icon-black.svg" aria-hidden="true">
                 </router-link>
 

@@ -33,6 +33,8 @@ export interface BasePost{
 
 export interface Post extends BasePost{
     stages: Stage[],
+    mapCenter: Coordinates,
+    mapZoom: number,
     description?: string,
     whatToBring?: string,
     pricing?: string,

@@ -2,11 +2,26 @@
 import StageModal from '@/components/create-post/StageModal.vue';
 import Navbar from '@/components/global/Navbar.vue';
 import { useStore } from 'vuex';
-import {ref} from 'vue'
+import {ref} from 'vue';
+import { useRouter } from 'vue-router';
+import Map from '@/components/global/Map.vue';
 
+const router = useRouter();
 const store = useStore();
 const activeAccordionItem = ref<number>(-1);
 const isAccordionOpen = ref<boolean>(false);
+
+const stageError = ref<boolean>(false);
+
+const goToStep3 = function(){    
+    if(store.state.newPost.stages.length === 0){
+        stageError.value = true; 
+        return
+    }else{
+        stageError.value = false;
+        router.push({path: '/create-post/step-3'});
+    }
+}
 
 const switchAccordion = function(index : number){
     // If the clicked accordionItem is the same as the one already open,
@@ -21,6 +36,14 @@ const switchAccordion = function(index : number){
         activeAccordionItem.value = index;
     }
 }
+
+const centerUpdated = function(newCenter: number[]){
+    store.commit('updateMapCenter', newCenter);
+}
+
+const zoomUpdated = function(newZoom: number){
+    store.commit('updateMapZoom', newZoom);
+}
 </script>
 
 <template>
@@ -32,7 +55,7 @@ const switchAccordion = function(index : number){
                     <img src="@/assets/icons/go-back-icon-black.svg" aria-hidden="true">
                 </router-link>
 
-                <router-link class="accordion-title p-8" to="/create-post/step-3">Next</router-link>
+                <div class="accordion-title p-8" @click="goToStep3">Next</div>
             </div>
 
             <h2 class="main-title text-centered">Create Post</h2>
@@ -44,7 +67,18 @@ const switchAccordion = function(index : number){
             <p class="common-text no-margins m-t-4">Time to add stages to your itinerary</p>
         </div>
 
-        <StageModal />
+        <div v-if="store.state.newPost.stages.length > 0" class="m-t-16">
+
+            <Map 
+                @updateCenter="centerUpdated"
+                @updateZoom="zoomUpdated"
+                :hasBorders="false" 
+                :stages="store.state.newPost.stages"
+            />
+            <div class="common-text m-t-4">Adjust zoom and map center</div>
+        </div>
+
+        <StageModal :isError="stageError" />
 
         <div :class="{open : isAccordionOpen && activeAccordionItem == index}" class="stage-item m-t-16" v-for="(stage, index) in store.state.newPost.stages" :key="index">
             <div class="d-flex justify-content-between p-16" @click="switchAccordion(index)">
