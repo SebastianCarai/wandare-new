@@ -40,12 +40,8 @@ export const store = createStore<RootState>({
             state.newPost.pricing = thirdStepData.pricing || '';
             state.newPost.documents = thirdStepData.documents || '';
         },
-        setAuthStatus(state, isAuthenticated: boolean){
-            console.log('before:', state.isAuthenticated);
-            
+        setAuthStatus(state, isAuthenticated: boolean){            
             state.isAuthenticated = isAuthenticated;
-            console.log('after:', state.isAuthenticated);
-
         }
     }
 });

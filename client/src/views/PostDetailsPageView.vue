@@ -6,6 +6,7 @@ import type { Post } from '@/types';
 import axios from 'axios';
 import { onBeforeMount, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import Loader from '@/components/global/Loader.vue';
 
 const post = ref<Post>();
 const isLoading = ref<boolean>(true);
@@ -45,6 +46,8 @@ function switchAccordion(accordionItem: string = ''){
 
 <template>
     <div>
+
+        <Loader v-if="isLoading" />
         <div v-if="post && !isLoading">
             <!-- Image Slider -->
             <Slider v-if="!isLoading" :isFullScreen="true" :images="post.images" />

@@ -14,7 +14,7 @@ defineProps<{
             <router-link :to="'/posts/'+post.id">
                 <h2 class="main-title">{{ post.title }}</h2>
             </router-link>
-            <h5 class="gray-text">{{ post.authorName }}</h5>
+            <h5 class="gray-text m-t-4">{{ post.authorName }}</h5>
         </div>
 
         <!-- Image slider and CTAs -->
