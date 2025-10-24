@@ -129,6 +129,7 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
         images: uploadedPostImages.map(image => image.value.url),
         map_center: postData.mapCenter,
         map_zoom: postData.mapZoom,
+        number_of_stages: stages.length,
         duration: postData.duration,
         description: postData.duration,
         what_to_bring: postData.whatToBring,
@@ -139,7 +140,7 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
         .single();
     // Supabase post upload error >> log the error, fallback and delete the uploaded images, and return 500 status
     if (uploadPostError) {
-        console.log('Error uploading base post data to DB: ', uploadPostError);
+        console.error('Error uploading base post data to DB: ', uploadPostError);
         await deleteImagesFromS3(uploadedPostImages);
         return res.status(500).json({ message: 'Something bad happened. Please try again' });
     }
@@ -174,6 +175,7 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
         }).select().single();
         if (uploadStageError) {
             await deleteImagesFromS3(uploadedStageImages);
+            await deleteImagesFromS3(uploadedPostImages);
             console.error('Supabase stage upload error: ', uploadStageError);
             throw new Error('Supabase stage upload error');
         }
@@ -184,10 +186,10 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
         const finalStages = await uploadedStages;
         const finalPost = {
             ...newPost,
-            stages: finalStages.map((stage) => stage.data || null)
+            stages: finalStages
         };
         const formattedFinalPost = zod_schemas_1.PostApiSchema.safeParse(finalPost);
-        return res.status(201).json(formattedFinalPost);
+        return res.status(201).json(formattedFinalPost.data);
     }
     catch (error) {
         if (error instanceof BadImageDimensionsError) {

@@ -79,11 +79,13 @@ const updateZoom = function(newZoom: number){
 
                 <!-- Marker popup, populated with stag content -->
                 <LPopup>
-                    <h4 class="main-title m-b-8">{{ stage.stageName }}</h4>
+                    <h4 class="main-title" 
+                        :class="{'m-b-8' : stage.images.length > 0 && stage.stageDescription}"
+                    >{{ stage.stageName }}</h4>
 
-                    <Slider :images="stage.images" />
+                    <Slider v-if="stage.images.length > 0" :images="stage.images" />
 
-                    <p class="map-popup-description small-text">{{ stage.stageDescription }}</p>
+                    <p v-if="stage.stageDescription && stage.stageDescription.length > 0" class="map-popup-description small-text">{{ stage.stageDescription }}</p>
                 </LPopup>
 
             </LMarker>

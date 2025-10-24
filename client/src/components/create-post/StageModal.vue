@@ -127,12 +127,14 @@ const saveStage = function(){
                         class="stage-modal-textarea"
                     ></textarea>
                 </div>
+
+                <div style="width: 100%;">
+                    <label for="stage-images" class="m-b-8">Stage images (max. 3)</label>
+                    <ImageCropper id="stage-images" :previews="stage.images" @updateCroppedImages="updateStageImages" :maxImages="3" :isWhite="true" />
+                </div>
             </div>
 
-
-            <ImageCropper :previews="stage.images" @updateCroppedImages="updateStageImages" :maxImages="3" :isWhite="true" />
         </div>
-
 
     </dialog>
 

@@ -18,11 +18,17 @@ router.get('/', basicAuth_1.authWithUserProfile, async (req, res) => {
         console.error(postDetailsError);
         throw new Error('Error while fetching from supabase');
     }
+    if (postsFeed.length === 0) {
+        return res.status(404).json({ message: "We're sorry. We ran out of posts" });
+    }
     // Format the posts based on the BasePostApiSchema and return only what is being properly formatted
     const formattedPosts = postsFeed
         .map(post => zod_schemas_1.BasePostApiSchema.safeParse(post))
         .filter(result => result.success)
         .map(formattedPost => formattedPost.data);
+    if (formattedPosts.length === 0) {
+        return res.status(500).json({ message: 'Something went wrong. Please try again' });
+    }
     res.status(200).json(formattedPosts);
 });
 // Post details route
@@ -35,10 +41,13 @@ router.get('/:id', async (req, res) => {
         .single();
     if (!data)
         return res.status(404).json({ message: 'Post not found' });
-    const parsedFinalPost = zod_schemas_1.PostApiSchema.safeParse(data);
     if (postDetailsError) {
         console.error('Supabase post details fetching error: ', postDetailsError);
-        return res.status(500).json({ message: 'Post not found' });
+        return res.status(500).json({ message: 'Something went wrong. Please try again' });
+    }
+    const parsedFinalPost = zod_schemas_1.PostApiSchema.safeParse(data);
+    if (!parsedFinalPost.success) {
+        return res.status(500).json({ message: 'Something went wrong. Please try again' });
     }
     res.status(200).json(parsedFinalPost);
 });
