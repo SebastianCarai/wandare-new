@@ -43,6 +43,8 @@ exports.BasePostApiSchema = BasePostDbSchema.transform((data) => ({
 // Full post schema
 const PostDbSchema = BasePostDbSchema.extend({
     stages: zod_1.z.array(exports.StageApiSchema),
+    map_center: zod_1.z.array(zod_1.z.number()),
+    map_zoom: zod_1.z.number(),
     description: zod_1.z.string().optional(),
     what_to_bring: zod_1.z.string().optional(),
     pricing: zod_1.z.string().optional(),
@@ -54,9 +56,11 @@ exports.PostApiSchema = PostDbSchema.transform((data) => ({
     title: data.title,
     authorId: data.author_id,
     authorName: data.author_name,
+    duration: data.duration,
     images: data.images,
     stages: data.stages,
-    duration: data.duration,
+    mapCenter: data.map_center,
+    mapZoom: data.map_zoom,
     description: data.description,
     whatToBring: data.what_to_bring,
     pricing: data.pricing,

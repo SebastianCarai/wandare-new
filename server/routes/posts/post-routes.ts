@@ -54,7 +54,7 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
             ...JSON.parse(stage[1] as string),
             images: stageImages
         }
-    });
+    });    
 
     // Get the post data (title, duration, description, etc...)
     const postData : Record<string, string | []> = {};
@@ -149,6 +149,7 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
         images: uploadedPostImages.map(image => image.value.url),
         map_center: postData.mapCenter,
         map_zoom: postData.mapZoom,
+        number_of_stages: stages.length,
         duration: postData.duration,
         description: postData.duration,
         what_to_bring: postData.whatToBring,
@@ -160,7 +161,7 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
 
     // Supabase post upload error >> log the error, fallback and delete the uploaded images, and return 500 status
     if(uploadPostError){
-        console.log('Error uploading base post data to DB: ', uploadPostError);
+        console.error('Error uploading base post data to DB: ', uploadPostError);
         await deleteImagesFromS3(uploadedPostImages);
         return res.status(500).json({message: 'Something bad happened. Please try again'});
     }
@@ -200,6 +201,7 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
 
         if(uploadStageError){
             await deleteImagesFromS3(uploadedStageImages);
+            await deleteImagesFromS3(uploadedPostImages);
             console.error('Supabase stage upload error: ', uploadStageError);
             throw new Error('Supabase stage upload error');
         }
@@ -210,13 +212,15 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
     // Call the concurrent stages upload, compose and send the final data 
     try {
         const finalStages = await uploadedStages;
+        
         const finalPost = {
             ...newPost,
-            stages: finalStages.map((stage: Record<string, any>) => stage.data || null)
+            stages: finalStages
         }
 
         const formattedFinalPost = PostApiSchema.safeParse(finalPost);
-        return res.status(201).json(formattedFinalPost);
+        
+        return res.status(201).json(formattedFinalPost.data);
     } catch (error: any) {
         if(error instanceof BadImageDimensionsError){
             return res.status(400).json({message: 'Bad image dimensions'});

@@ -7,23 +7,27 @@ import axios from 'axios';
 import { onBeforeMount, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Loader from '@/components/global/Loader.vue';
+import ErrorMessage from '@/components/global/ErrorMessage.vue';
+import { useStore } from 'vuex';
 
 const post = ref<Post>();
-const isLoading = ref<boolean>(true);
-
+const store = useStore();
 
 onBeforeMount(async() => {
+    store.commit('setLoadingState', true);
     const router = useRoute();
 
     const postId = router.params.id;
 
-    const postDetails = await axios.get(`/api/posts/${postId}`);
-    
-    post.value = postDetails.data.data;
-
-    console.log(post.value);
-    
-    isLoading.value = false;
+    try {
+        const postDetails = await axios.get(`/api/posts/${postId}`);
+        post.value = postDetails.data.data;
+        store.commit('setStatusAndError', {statusCode: 200, errorMessage: ''});
+        store.commit('setLoadingState', false);
+    } catch (error: any) {
+        store.commit('setStatusAndError', {statusCode: error.status, errorMessage: error.response.data.message});
+        store.commit('setLoadingState', false);
+    }
 })
 
 
@@ -49,11 +53,11 @@ function switchAccordion(accordionItem: string = ''){
 
 <template>
     <div>
+        <Loader v-if="store.state.isLoading" />
 
-        <Loader v-if="isLoading" />
-        <div v-if="post && !isLoading">
+        <div v-if="post && !store.state.isLoading">
             <!-- Image Slider -->
-            <Slider v-if="!isLoading" :isFullScreen="true" :images="post.images" />
+            <Slider v-if="!store.state.isLoading" :isFullScreen="true" :images="post.images" />
         
             <button type="button" @click="$router.go(-1)" class="go-back-button" aria-label="Go back to the previous page">
                 <img src="@/assets/icons/go-back-icon.svg" aria-hidden="true">
@@ -68,7 +72,7 @@ function switchAccordion(accordionItem: string = ''){
                 </div>
         
                 <!-- Map -->
-                <Map :center="post.mapCenter" :zoom="post.mapZoom" v-if="!isLoading" :stages="post.stages" />
+                <Map :center="post.mapCenter" :zoom="post.mapZoom" v-if="!store.state.isLoading" :stages="post.stages" />
         
                 <!-- Accordion -->
                 <div class="m-t-40" v-if="post?.description || post?.whatToBring || post?.pricing || post?.documents">
@@ -110,12 +114,16 @@ function switchAccordion(accordionItem: string = ''){
                     </div>
                 </div>
         
-                <Navbar activeNavItem="none" />
             </div>
         </div>
-        <div v-else>
-            Post Not Found
-        </div>
+
+        <ErrorMessage
+            v-if="store.state.statusCode !== 200"
+            :errorCode="store.state.statusCode" 
+            :errorMessage="store.state.errorMessage" 
+        />
+
+        <Navbar activeNavItem="none" />
     </div>
 </template>
 

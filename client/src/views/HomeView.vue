@@ -6,19 +6,21 @@ import { onBeforeMount, ref } from 'vue';
 import axios from 'axios';
 import Loader from '@/components/global/Loader.vue';
 import { useRouter } from 'vue-router';
+import ErrorMessage from '@/components/global/ErrorMessage.vue';
+import { useStore } from 'vuex';
 
 const router = useRouter();
+const store = useStore();
 
 const posts = ref<Post[]>([]);
-const isLoading = ref<boolean>(true);
 
 onBeforeMount(async() => {
-
+    store.commit('setLoadingState', true);
     try {
         const res = await axios.get('/api/posts')
         posts.value = res.data;
-
-        isLoading.value = false;
+        store.commit('setStatusAndError', {statusCode: 200, errorMessage: ''});
+        store.commit('setLoadingState', false);
 
     } catch (error: any) {
         console.error(error);
@@ -26,6 +28,9 @@ onBeforeMount(async() => {
             
             router.push({ path: '/login?error=401' });
         }
+        
+        store.commit('setStatusAndError', {statusCode: error.status, errorMessage: error.response.data.message});
+        store.commit('setLoadingState', false);
     }
 })
 </script>
@@ -33,9 +38,14 @@ onBeforeMount(async() => {
 <template>
     <div class="view-container">
 
-        <Loader v-if="isLoading" />
+        <ErrorMessage 
+            :errorCode="store.state.statusCode" 
+            :errorMessage="store.state.errorMessage" 
+        />
 
-        <div v-if="!isLoading" class="homepage-feed">
+        <Loader v-if="store.state.isLoading" />
+
+        <div v-if="!store.state.isLoading" class="homepage-feed">
             <div class="feed_container">
                 <PostCard v-for="(post, index) in posts" :key="index" :post="post" />
             </div>

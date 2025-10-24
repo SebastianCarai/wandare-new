@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import router from '@/router';
+
 defineProps<{
-  activeNavItem: string
+    activeNavItem: string
 }>();
 </script>
 
@@ -23,10 +25,10 @@ defineProps<{
             <img :class="{hidden: activeNavItem === 'friends'}" class="navbar-icon" src="@/assets/icons/friends-icon-black.svg" alt="Friends Icon">
             <img :class="{visible: activeNavItem === 'friends'}" class="navbar-icon navbar-icon-active" src="@/assets/icons/friends-icon-active.svg" alt="Friends Icon Active">
         </div>
-        <div>
+        <router-link to="/profile">
             <img :class="{hidden: activeNavItem === 'profile'}" class="navbar-icon" src="@/assets/icons/profile-icon-black.svg" alt="Profile Icon">
             <img :class="{visible: activeNavItem === 'profile'}" class="navbar-icon navbar-icon-active" src="@/assets/icons/profile-icon-active.svg" alt="Profile Icon Active">
-        </div>
+        </router-link>
 
     </div>
 </template>

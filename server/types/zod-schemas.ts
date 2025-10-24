@@ -32,6 +32,7 @@ const BasePostDbSchema = z.object({
     author_name: z.string(),
     duration: z.string(),
     images: z.array(z.string()),
+    number_of_stages: z.number(),
 });
 
 export const BasePostApiSchema = BasePostDbSchema.transform((data) => ({
@@ -40,7 +41,8 @@ export const BasePostApiSchema = BasePostDbSchema.transform((data) => ({
     authorId: data.title,
     authorName: data.author_name,
     duration: data.duration,
-    images: data.images
+    images: data.images,
+    numberOfStages: data.number_of_stages
 }));
 
 // Full post schema
@@ -62,6 +64,7 @@ export const PostApiSchema = PostDbSchema.transform((data) => ({
     authorName: data.author_name,
     duration: data.duration,
     images: data.images,
+    numberOfStages: data.number_of_stages,
     stages: data.stages,
     mapCenter: data.map_center,
     mapZoom: data.map_zoom,

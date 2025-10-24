@@ -13,12 +13,22 @@ const isAccordionOpen = ref<boolean>(false);
 
 const stageError = ref<boolean>(false);
 
-const goToStep3 = function(){    
+const goToStep3 = function(){
+    // Show error if user didn't add any stage
     if(store.state.newPost.stages.length === 0){
         stageError.value = true; 
         return
     }else{
         stageError.value = false;
+
+        // If the user didn't change the map center and zoom, give a default value
+        if(store.state.newPost.mapCenter.length === 0){
+            store.commit('updateMapCenter', store.state.newPost.stages[0].coordinates);
+        }
+        if(store.state.newPost.mapZoom === 0){
+            store.commit('updateMapZoom', 12);
+        }
+
         router.push({path: '/create-post/step-3'});
     }
 }

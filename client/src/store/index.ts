@@ -5,6 +5,9 @@ import type { Coordinates, Newstage } from '@/types';
 export const store = createStore<RootState>({
     state:{
         isAuthenticated: false,
+        statusCode: 200,
+        errorMessage: '',
+        isLoading: false,
         newPost: {
             title: '',
             duration: '',
@@ -50,6 +53,13 @@ export const store = createStore<RootState>({
         },
         setAuthStatus(state, isAuthenticated: boolean){            
             state.isAuthenticated = isAuthenticated;
+        },
+        setStatusAndError(state, payload: {statusCode: number, errorMessage: string}){
+            state.statusCode = payload.statusCode;
+            state.errorMessage = payload.errorMessage;
+        },
+        setLoadingState(state, isLoading: boolean){
+            state.isLoading = isLoading;
         }
     }
 });

@@ -55,7 +55,12 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
     const postData = {};
     for (const [key, value] of Object.entries(req.body)) {
         if (!key.startsWith('stageData_')) {
-            postData[key] = value;
+            if (key === 'mapCenter') {
+                postData[key] = JSON.parse("[" + value + "]");
+            }
+            else {
+                postData[key] = value;
+            }
         }
     }
     const bucketName = process.env.BUCKET_NAME;
@@ -122,6 +127,8 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
         author_id: req.profile.id,
         author_name: `${req.profile.given_name} ${req.profile.family_name}`,
         images: uploadedPostImages.map(image => image.value.url),
+        map_center: postData.mapCenter,
+        map_zoom: postData.mapZoom,
         duration: postData.duration,
         description: postData.duration,
         what_to_bring: postData.whatToBring,

@@ -4,15 +4,19 @@ import { useStore } from 'vuex';
 import {ref} from 'vue';
 import axios from 'axios';
 import { createPostFormData } from '@/functions/functions';
+import { useRouter } from 'vue-router';
+import Loader from '@/components/global/Loader.vue';
 
 const store = useStore();
-
+const router = useRouter();
 const description = ref<string>('');
 const whatToBring = ref<string>('');
 const pricing = ref<string>('');
 const documents = ref<string>('');
 
 const createPost = function(){
+    store.commit('setLoadingState', true);
+
     store.commit('saveThirdStepData', {
         description: description.value, 
         whatToBring: whatToBring.value, 
@@ -21,7 +25,6 @@ const createPost = function(){
     });
 
     // Create formdata to send to the server from the store state with newPost data
-
     const formData = createPostFormData(store.state.newPost);
 
     axios.post('/api/posts/create-post', formData, {
@@ -30,13 +33,15 @@ const createPost = function(){
         }
     })
     .then((res) => {
-        console.log(res);
-        
+        store.commit('setLoadingState', false);
+        router.push( { path : `/posts/${res.data.id}` } )
     })
 }
 </script>
 
 <template>
+    <Loader v-if="store.state.isLoading" />
+
     <div class="view-container">
         <!-- Create Post Header -->
         <div class="create-post-header">

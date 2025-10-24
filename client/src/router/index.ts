@@ -8,6 +8,7 @@ import Step3 from "@/views/create-post/Step3.vue";
 import LoginView from '@/views/Login.vue';
 import axios from "axios";
 import { useStore } from "vuex";
+import ProfileView from "@/views/ProfileView.vue";
 
 // Define your routes with strong typing
 const routes: Array<RouteRecordRaw> = [
@@ -40,6 +41,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: LoginView
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: ProfileView
   }
 ]
 
