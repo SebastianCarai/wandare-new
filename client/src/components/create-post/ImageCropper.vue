@@ -158,13 +158,21 @@ const removeThumbnail = function(index : number){
                     :img="pic"
                     :options="{
                         viewMode: 1,
-                        dragMode: 'crop',
+                        dragMode: 'move',
                         aspectRatio: 1,
+                        cropBoxResizable: false
+                    }"
+                    :presetMode="{
+                        mode: 'fixedSize',
+                        width: 300,
+                        height: 300,
                     }"
                 />
             </div>
 
-            <button @click="cropImage" class="m-t-8 m-b-8">Crop</button>
+            <div class="d-flex justify-content-center align-items-center">
+                <button @click="cropImage" class="default-button m-t-8 m-b-8">Crop Image</button>
+            </div>
         </dialog>
     </div>
 

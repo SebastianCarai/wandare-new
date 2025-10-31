@@ -1,12 +1,14 @@
+// GET routes for posts:
+// Posts feed
+// Post details
+
 import Router, { Request, Response } from 'express';
 import { supabase } from '../../app';
-import type { Post } from '../../types';
 import { authWithUserProfile } from '../../middlewares/basicAuth';
 import { PostApiSchema, BasePostApiSchema } from '../../types/zod-schemas';
-import { parse } from 'path';
-
 const router = Router();
 
+// Posts feed >> Get other user's posts
 router.get('/', authWithUserProfile,  async(req: Request, res: Response) => {
 
     const {data: postsFeed, error: postDetailsError} = await supabase
@@ -30,20 +32,25 @@ router.get('/', authWithUserProfile,  async(req: Request, res: Response) => {
         .filter(result => result.success)
         .map(formattedPost => formattedPost.data)
 
-
     if(formattedPosts.length === 0){
         return res.status(500).json({message: 'Something went wrong. Please try again'});
     }
-    
 
-    res.status(200).json(formattedPosts);
+    // Cache feed for 10 minutes
+    const cacheTime = 60 * 10;
+
+    res.set('Cache-Control', `public, max-age=${cacheTime}`);
+
+    res.json(formattedPosts);
 });
 
 // Post details route
 router.get('/:id', async(req: Request, res: Response) => {
 
+    // Get post id from url
     const id : number = parseInt(req.params.id as string);
 
+    // Query for post details and stages
     const {data, error: postDetailsError} = await supabase
     .from('posts')
     .select(`*, stages(*)`)
@@ -57,15 +64,18 @@ router.get('/:id', async(req: Request, res: Response) => {
         return res.status(500).json({message: 'Something went wrong. Please try again'});
     }
 
-    const parsedFinalPost = PostApiSchema.safeParse(data);  
+    // Format and return the post
+    const parsedFinalPost = PostApiSchema.safeParse(data);
     if(!parsedFinalPost.success){
         return res.status(500).json({message: 'Something went wrong. Please try again'});
     }
+
+    // Cache post details for one hour
+    const cacheTime = 60 * 60;
+
+    res.set('Cache-Control', `public, max-age=${cacheTime}`);
         
-    res.status(200).json(parsedFinalPost);
-
-
-})
-
+    res.json(parsedFinalPost);
+});
 
 export default router

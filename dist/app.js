@@ -12,6 +12,7 @@ const supabase_js_1 = require("@supabase/supabase-js");
 const cors_1 = __importDefault(require("cors"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const index_1 = __importDefault(require("./routes/posts/index"));
+const index_2 = __importDefault(require("./routes/profile/index"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const path_1 = __importDefault(require("path"));
@@ -26,6 +27,7 @@ exports.app.use((0, cookie_parser_1.default)());
 exports.app.set("trust proxy", true);
 exports.app.use('/api', auth_1.default);
 exports.app.use('/api/posts', index_1.default);
+exports.app.use('/api/profile', index_2.default);
 // --- Serve Vue static files ---
 const distPath = path_1.default.join(__dirname, "../client/dist");
 // Serve static Vue files

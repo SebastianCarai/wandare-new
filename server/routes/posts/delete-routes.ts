@@ -43,16 +43,24 @@ router.delete('/:id', async(req: Request, res: Response) => {
         return res.status(403).json({message: 'Not authorized to delete this post'});
     }else{
 
-        Promise.all([
-            supabase
-            .from('posts')
-            .delete()
-            .eq('id', postId),
-
-            deleteImagesFromS3(keysToDelete)
-        ])
-    }
+        try {
+            await Promise.all([
+                supabase
+                .from('posts')
+                .delete()
+                .eq('id', postId),
     
+                deleteImagesFromS3(keysToDelete)
+            ]);
+
+            res.sendStatus(204);
+        } catch (error) {
+            console.error('Error while deleting post: ', error);
+            return res.status(500).json({message: 'Something went wrong. Please try again'});
+        }
+
+    }
+
     
 });
 

@@ -25,11 +25,12 @@ export function generateRandomString(length: number) : string {
     return result;
 }
 
+// Throw and error with this class when the user submits images wider than 1000px
 class BadImageDimensionsError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'BadImageDimensionsError';
-  }
+    constructor(message: string) {
+        super(message);
+        this.name = 'BadImageDimensionsError';
+    }
 }
 
 
@@ -69,6 +70,14 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
     }
     
 
+    if(
+        postData.title.length === 0 || !postData.title ||
+        postData.duration.length === 0 || !postData.duration ||
+        stages.length === 0 || 
+        postImages.length === 0
+    ) return res.status(400).json({message: 'Missing minimum required data'});
+    
+    
     const bucketName = process.env.BUCKET_NAME;
     const couldfrontUrl = process.env.CLOUDFRONT_URL;
 
@@ -102,6 +111,7 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
         })
     }
 
+    // Fallback function that deletes images uploaded to S3 whenever there is an error while creating the post
     const deleteImagesFromS3 = async (images: PromiseFulfilledResult<{ key: string; url: string }>[]) => {
         const keysToDelete = images.map(image => {
             return {Key: image.value.key}
@@ -151,7 +161,7 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
         map_zoom: postData.mapZoom,
         number_of_stages: stages.length,
         duration: postData.duration,
-        description: postData.duration,
+        description: postData.description,
         what_to_bring: postData.whatToBring,
         pricing: postData.pricing,
         required_documents: postData.documents,
@@ -159,7 +169,7 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
     .select()
     .single();
 
-    // Supabase post upload error >> log the error, fallback and delete the uploaded images, and return 500 status
+    // Supabase post upload error >> log the error, delete the uploaded post images, and return 500 status
     if(uploadPostError){
         console.error('Error uploading base post data to DB: ', uploadPostError);
         await deleteImagesFromS3(uploadedPostImages);
@@ -209,8 +219,9 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
         return newStageData
     }));
 
-    // Call the concurrent stages upload, compose and send the final data 
+    // Call the concurrent stages upload, compose and send the final post data
     try {
+
         const finalStages = await uploadedStages;
         
         const finalPost = {
@@ -221,12 +232,15 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
         const formattedFinalPost = PostApiSchema.safeParse(finalPost);
         
         return res.status(201).json(formattedFinalPost.data);
+
     } catch (error: any) {
+
         if(error instanceof BadImageDimensionsError){
             return res.status(400).json({message: 'Bad image dimensions'});
         }else{
             return res.status(500).json({message: 'Something bad happened. Please try again'});
         }
+        
     }
 });
 

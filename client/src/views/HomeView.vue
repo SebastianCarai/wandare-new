@@ -5,30 +5,26 @@ import type { Post } from '@/types';
 import { onBeforeMount, ref } from 'vue';
 import axios from 'axios';
 import Loader from '@/components/global/Loader.vue';
-import { useRouter } from 'vue-router';
 import ErrorMessage from '@/components/global/ErrorMessage.vue';
 import { useStore } from 'vuex';
 
-const router = useRouter();
 const store = useStore();
 
 const posts = ref<Post[]>([]);
 
+// Get post feed
 onBeforeMount(async() => {
+    axios.defaults.adapter = 'fetch';
+
     store.commit('setLoadingState', true);
+
     try {
-        const res = await axios.get('/api/posts')
+        const res = await axios.get('/api/posts');
         posts.value = res.data;
         store.commit('setStatusAndError', {statusCode: 200, errorMessage: ''});
         store.commit('setLoadingState', false);
-
     } catch (error: any) {
         console.error(error);
-        if(error.status === 401){
-            
-            router.push({ path: '/login?error=401' });
-        }
-        
         store.commit('setStatusAndError', {statusCode: error.status, errorMessage: error.response.data.message});
         store.commit('setLoadingState', false);
     }

@@ -12,10 +12,12 @@ import { useStore } from 'vuex';
 
 const post = ref<Post>();
 const store = useStore();
+const router = useRoute();
 
+// Get post details
 onBeforeMount(async() => {
+
     store.commit('setLoadingState', true);
-    const router = useRoute();
 
     const postId = router.params.id;
 

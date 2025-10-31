@@ -15,8 +15,10 @@ const pricing = ref<string>('');
 const documents = ref<string>('');
 
 const createPost = function(){
+
     store.commit('setLoadingState', true);
 
+    // Update state data
     store.commit('saveThirdStepData', {
         description: description.value, 
         whatToBring: whatToBring.value, 
@@ -25,14 +27,16 @@ const createPost = function(){
     });
 
     // Create formdata to send to the server from the store state with newPost data
-    const formData = createPostFormData(store.state.newPost);
+    const formData = createPostFormData(store.state.newPost);    
 
     axios.post('/api/posts/create-post', formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
     })
+    
     .then((res) => {
+        // Redirect to page
         store.commit('setLoadingState', false);
         router.push( { path : `/posts/${res.data.id}` } )
     })

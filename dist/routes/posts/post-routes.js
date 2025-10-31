@@ -26,6 +26,7 @@ function generateRandomString(length) {
     }
     return result;
 }
+// Throw and error with this class when the user submits images wider than 1000px
 class BadImageDimensionsError extends Error {
     constructor(message) {
         super(message);
@@ -63,6 +64,11 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
             }
         }
     }
+    if (postData.title.length === 0 || !postData.title ||
+        postData.duration.length === 0 || !postData.duration ||
+        stages.length === 0 ||
+        postImages.length === 0)
+        return res.status(400).json({ message: 'Missing minimum required data' });
     const bucketName = process.env.BUCKET_NAME;
     const couldfrontUrl = process.env.CLOUDFRONT_URL;
     // This function validates the metadata for each image (throws error if the image is wider than 1000px)
@@ -89,6 +95,7 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
             return { key, url: `${couldfrontUrl}/${key}` };
         });
     };
+    // Fallback function that deletes images uploaded to S3 whenever there is an error while creating the post
     const deleteImagesFromS3 = async (images) => {
         const keysToDelete = images.map(image => {
             return { Key: image.value.key };
@@ -138,7 +145,7 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
     })
         .select()
         .single();
-    // Supabase post upload error >> log the error, fallback and delete the uploaded images, and return 500 status
+    // Supabase post upload error >> log the error, delete the uploaded post images, and return 500 status
     if (uploadPostError) {
         console.error('Error uploading base post data to DB: ', uploadPostError);
         await deleteImagesFromS3(uploadedPostImages);
@@ -181,7 +188,7 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
         }
         return newStageData;
     }));
-    // Call the concurrent stages upload, compose and send the final data 
+    // Call the concurrent stages upload, compose and send the final post data
     try {
         const finalStages = await uploadedStages;
         const finalPost = {
