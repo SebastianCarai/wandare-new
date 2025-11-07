@@ -16,6 +16,9 @@
 .view-container{
     padding: 0 1rem 88px 1rem;
 }
+.view-container.min-full-height{
+    min-height: 100dvh;
+}
 
 .wandare-full-logo{
   width: 260px;
@@ -33,6 +36,9 @@
     img{
         width: 100%;
     }
+}
+.go-back-button.position-fixed{
+  position: fixed;
 }
 
 .go-back-button.static{

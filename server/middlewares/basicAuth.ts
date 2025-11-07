@@ -14,9 +14,9 @@ export const authWithUserProfile = async function(req: Request, res: Response, n
     const sessionManager = createCookieSessionManager(req, res);
 
     try {
-        const authProfile = await kindeClient.getUserProfile(sessionManager);     
+        const authProfile = await kindeClient.getUserProfile(sessionManager);        
         
-        req.profile = authProfile;
+        req.profile = authProfile;        
 
         next();
     } catch (error) {

@@ -85,7 +85,7 @@ const updateZoom = function(newZoom: number){
 
                     <Slider v-if="stage.images.length > 0" :images="stage.images" />
 
-                    <p v-if="stage.stageDescription && stage.stageDescription.length > 0" class="map-popup-description small-text">{{ stage.stageDescription }}</p>
+                    <p class="map-popup-description small-text">{{ stage.stageDescription }}</p>
                 </LPopup>
 
             </LMarker>
@@ -151,7 +151,7 @@ const updateZoom = function(newZoom: number){
 
     .map-popup-description{
         margin: 1rem 0 0 0;
-        min-width: 320px;
+        min-width: 280px;
     }
 }
 

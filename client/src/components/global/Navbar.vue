@@ -11,10 +11,10 @@ defineProps<{
             <img :class="{hidden: activeNavItem === 'home'}" class="navbar-icon" src="@/assets/icons/home-icon-black.svg" alt="Homepage Icon">
             <img :class="{visible: activeNavItem === 'home'}" class="navbar-icon navbar-icon-active" src="@/assets/icons/home-icon-active.svg" alt="Homepage Icon Active">
         </router-link>
-        <div>
+        <router-link to="/world-map">
             <img :class="{hidden: activeNavItem === 'search'}" class="navbar-icon" src="@/assets/icons/search-icon-black.svg" alt="Search Icon">
             <img :class="{visible: activeNavItem === 'search'}" class="navbar-icon navbar-icon-active" src="@/assets/icons/search-icon-active.svg" alt="Search Icon Active">
-        </div>
+        </router-link>
         <router-link to="/create-post/step-1">
             <img :class="{hidden: activeNavItem === 'create-post'}" class="navbar-icon" src="@/assets/icons/create-post-icon-black.svg" alt="Create Profile Icon">
             <img :class="{visible: activeNavItem === 'create-post'}" class="navbar-icon navbar-icon-active" src="@/assets/icons/create-post-icon-active.svg" alt="Create Profile Icon Active">

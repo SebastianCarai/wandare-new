@@ -9,11 +9,17 @@ onBeforeMount(async () => {
     console.log(profile);
 })
 
+const logout = () => {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('profile');
+    window.location.href = "/api/logout";
+}
+
 </script>
 
 <template>
     <div class="p-absolute-centered">
-        <a class="default-button" href="/api/logout">Logout</a>
+        <a class="default-button" @click="logout">Logout</a>
     </div>
 
     <Navbar activeNavItem="profile" />

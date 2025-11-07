@@ -26,7 +26,7 @@ export function generateRandomString(length: number) : string {
 }
 
 // Throw and error with this class when the user submits images wider than 1000px
-class BadImageDimensionsError extends Error {
+export class BadImageDimensionsError extends Error {
     constructor(message: string) {
         super(message);
         this.name = 'BadImageDimensionsError';
@@ -37,7 +37,10 @@ class BadImageDimensionsError extends Error {
 // 1. Upload the main posts images to s3
 // 2. Save the base post data to the DB
 // 3. For each stage: upload stage images to s3, then save the stage data to the DB
-router.post('/create-post', authWithUserProfile , upload.any(), async(req: Request, res: Response) => {    
+router.post('/create-post', authWithUserProfile , upload.any(), async(req: Request, res: Response) => { 
+
+
+    const authorName = (req.profile as any).preferred_username || `${req.profile!.given_name} ${req.profile!.family_name}`;    
 
     // Get all the images from the files
     const images = req.files as Express.Multer.File[];        
@@ -75,7 +78,11 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
         postData.duration.length === 0 || !postData.duration ||
         stages.length === 0 || 
         postImages.length === 0
-    ) return res.status(400).json({message: 'Missing minimum required data'});
+    ) {
+        (req.files as Express.Multer.File[]).forEach(file => delete (file as any).buffer);
+        delete req.files;
+        return res.status(400).json({message: 'Missing minimum required data'});
+    }
     
     
     const bucketName = process.env.BUCKET_NAME;
@@ -139,11 +146,15 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
         await deleteImagesFromS3(uploadedPostImages);
 
         if(rejectedPostImages.some(r => r.reason instanceof BadImageDimensionsError)){
+            (req.files as Express.Multer.File[]).forEach(file => delete (file as any).buffer);
+            delete req.files;
             return res.status(400).json({message: 'Bad post image dimensions'});
         }else{
             console.error(`Error while uploading post images to s3. 
                 User: ${req.profile?.id}. 
                 Rejected images: `, rejectedPostImages);
+            (req.files as Express.Multer.File[]).forEach(file => delete (file as any).buffer);
+            delete req.files;
             return res.status(500).json({message: 'Something bad happened. Please try again'});
         }
     }
@@ -155,7 +166,7 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
     .insert({
         title: postData.title,
         author_id: req.profile!.id,
-        author_name: `${req.profile!.given_name} ${req.profile!.family_name}`,
+        author_name: authorName,
         images: uploadedPostImages.map(image => image.value.url),
         map_center: postData.mapCenter,
         map_zoom: postData.mapZoom,
@@ -173,6 +184,8 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
     if(uploadPostError){
         console.error('Error uploading base post data to DB: ', uploadPostError);
         await deleteImagesFromS3(uploadedPostImages);
+        (req.files as Express.Multer.File[]).forEach(file => delete (file as any).buffer);
+        delete req.files;
         return res.status(500).json({message: 'Something bad happened. Please try again'});
     }
 
@@ -231,10 +244,15 @@ router.post('/create-post', authWithUserProfile , upload.any(), async(req: Reque
 
         const formattedFinalPost = PostApiSchema.safeParse(finalPost);
         
+        (req.files as Express.Multer.File[]).forEach(file => delete (file as any).buffer);
+        delete req.files;
         return res.status(201).json(formattedFinalPost.data);
 
     } catch (error: any) {
 
+        (req.files as Express.Multer.File[]).forEach(file => delete (file as any).buffer);
+        delete req.files;
+        
         if(error instanceof BadImageDimensionsError){
             return res.status(400).json({message: 'Bad image dimensions'});
         }else{

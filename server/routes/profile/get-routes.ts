@@ -2,6 +2,9 @@ import { Request, Response, Router } from "express";
 import { authWithUserProfile } from "../../middlewares/basicAuth";
 import { supabase } from "../../app";
 import { PostApiSchema } from "../../types/zod-schemas";
+import axios from 'axios';
+import { getM2MToken } from "../../config/kinde";
+
 
 const router = Router();
 

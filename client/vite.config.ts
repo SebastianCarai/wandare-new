@@ -26,6 +26,9 @@ export default defineConfig({
           { src: '/icons/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' }
         ]
       },
+      injectManifest: {
+        maximumFileSizeToCacheInBytes: 3 * 1024 ** 2
+      },
       workbox: {
         runtimeCaching: [
           {
@@ -50,6 +53,11 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true
+      },
+      '/geo': {
+        target: 'https://dh7jufp0oeaok.cloudfront.net',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/geo/, '')
       }
     }
   },

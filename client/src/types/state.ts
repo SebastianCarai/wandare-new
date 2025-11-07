@@ -24,7 +24,6 @@ export interface NewPost extends FirstStep, SecondStep, ThirdStep{}
 
 export interface RootState{
     newPost: NewPost,
-    isAuthenticated: boolean,
     statusCode: number,
     errorMessage: string,
     isLoading: boolean

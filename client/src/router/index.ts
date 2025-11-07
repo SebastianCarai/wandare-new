@@ -1,14 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
-import PostDetailsPageView from "@/views/PostDetailsPageView.vue";
+import PostDetailsPage from "@/views/PostDetailsPage.vue";
 import Step1 from "@/views/create-post/Step1.vue";
 import Step2 from "@/views/create-post/Step2.vue";
 import Step3 from "@/views/create-post/Step3.vue";
-import LoginView from '@/views/Login.vue';
+import Login from '@/views/Login.vue';
+import CompleteRegistration from "@/views/CompleteRegistration.vue";
 import axios from "axios";
-import { useStore } from "vuex";
-import ProfileView from "@/views/ProfileView.vue";
+import Profile from "@/views/Profile.vue";
+import WorldMap from "@/views/search/WorldMap.vue";
+import Continent from "@/views/Continent.vue";
 
 // Define your routes with strong typing
 const routes: Array<RouteRecordRaw> = [
@@ -20,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/posts/:id',
     name: 'Post Details Page',
-    component: PostDetailsPageView 
+    component: PostDetailsPage 
   },
   {
     path: '/create-post/step-1',
@@ -40,12 +42,27 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'Login',
-    component: LoginView
+    component: Login
+  },
+  {
+    path: '/complete-registration',
+    name: 'Complete Registration',
+    component: CompleteRegistration
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: ProfileView
+    component: Profile
+  },
+  {
+    path: '/world-map',
+    name: 'World Map',
+    component: WorldMap
+  },
+  {
+    path: '/continents/:id',
+    name: 'Continent Page',
+    component: Continent
   }
 ]
 
@@ -55,18 +72,24 @@ const router = createRouter({
 })
 
 
-router.beforeEach(async (to) => {
-  const store = useStore();
+router.beforeEach(async (to) => {  
+  if(!localStorage.getItem('isAuthenticated')){
 
-  if(!store.state.isAuthenticated){
     if(to.name === 'Login') return true;
+    if(localStorage.getItem('isAuthenticated')) return true;
+    
+    try {
+      const response = await axios.get('/api/status');
+      localStorage.setItem('profile', JSON.stringify(response.data.profile));
 
-    const response = await axios.get('/api/status');
+      if(response.data.redirect){
+        localStorage.setItem('isAuthenticated', 'true');
+        return {name: 'Complete Registration'}
+      } 
+      localStorage.setItem('isAuthenticated', 'true');
 
-    if(!response.data.isAuthenticated){
+    } catch (error) {
       return { name: 'Login' };
-    }else{
-      store.commit('setAuthStatus', true);
     }
   }else{
     return true

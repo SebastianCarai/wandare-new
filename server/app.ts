@@ -1,8 +1,7 @@
 /// <reference path="./custom.d.ts" />
 
 import express from 'express';
-import {Request, Response} from 'express';
-import config from './config/config';
+import serverConfig from './config/config';
 import cookieParser from 'cookie-parser';
 import { createClient } from '@supabase/supabase-js';
 import cors from 'cors';
@@ -11,10 +10,7 @@ import postRouter from './routes/posts/index';
 import profileRouter from './routes/profile/index'
 import dotenv from 'dotenv';
 dotenv.config();
-
 import path from "path";
-import { fileURLToPath } from "url";
-
 
 export const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -49,6 +45,6 @@ app.use((req, res, next) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 
-app.listen(config.port, () => {
-    console.log(`Server running on port ${config.port}`);
+app.listen(serverConfig.port, () => {
+    console.log(`Server running on port ${serverConfig.port}`);
 })

@@ -61,7 +61,7 @@ function switchAccordion(accordionItem: string = ''){
             <!-- Image Slider -->
             <Slider v-if="!store.state.isLoading" :isFullScreen="true" :images="post.images" />
         
-            <button type="button" @click="$router.go(-1)" class="go-back-button" aria-label="Go back to the previous page">
+            <button type="button" @click="$router.go(-1)" class="go-back-button position-fixed" aria-label="Go back to the previous page">
                 <img src="@/assets/icons/go-back-icon.svg" aria-hidden="true">
             </button>
         

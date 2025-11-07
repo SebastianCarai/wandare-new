@@ -2,7 +2,6 @@
 import { useTemplateRef, ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import VuePictureCropper, { cropper } from 'vue-picture-cropper';
 import { generateRandomString, resizeWithPica } from '@/functions/functions';
-import { useStore } from 'vuex';
 
 const props = defineProps<{
     maxImages: number,
@@ -11,11 +10,8 @@ const props = defineProps<{
     isError?: boolean
 }>();
 
-
-const store = useStore();
-
 // Emit updateCroppedImages event to pass the cropped images to the parent component
-const emit = defineEmits(["updateCroppedImages"]);
+const emit = defineEmits(["updateCroppedImages", "removePreview"]);
 
 // Image that is passed to the cropper >> It's a base64 string
 const pic = ref<string>('');
@@ -121,7 +117,7 @@ const cropImage = async function(){
 }
 
 const removeThumbnail = function(index : number){
-    store.commit('removePreviewThumbnail', index);
+    emit('removePreview', index);
 }
 </script>
 

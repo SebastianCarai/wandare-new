@@ -35,7 +35,7 @@ router.delete('/:id', async(req: Request, res: Response) => {
     }
 
     if(postAuthorError){
-        console.error('Error while fetching from supabase', postAuthorError);
+        console.error('Error while fetching from supabase: ', postAuthorError);
         return res.status(500).json({message: 'Something went wrong. Please try again'});
     }
 

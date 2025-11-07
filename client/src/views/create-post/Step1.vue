@@ -8,6 +8,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const store = useStore();
 const title = ref<string>(store.state.newPost.title || '');
+const durationNumber = ref<number | null>(parseInt(store.state.newPost.duration.split(' ')[0]) || null);
+const durationTime = ref<string>(store.state.newPost.duration.split(' ')[1] || 'days');
 const duration = ref<string>(store.state.newPost.duration || '');
 
 const postTitleError = ref<{isError: boolean, message: string}>({isError: false, message: ''});
@@ -36,17 +38,22 @@ const checkInputLength = function(
 }
 
 const goToSecondStep = function(){
+    if(
+        (durationNumber.value && durationNumber.value > 0) &&
+        (durationTime.value && durationTime.value.trim().length > 0)
+    ){
+        duration.value = `${durationNumber.value} ${durationTime.value}`;
+    }
     
     checkInputLength(title.value, postTitleError, 'This field is required');
     checkInputLength(duration.value, postDurationError, 'This field is required');
     checkInputLength(store.state.newPost.images, postImagesError, 'Add at least one image');
 
     if(!postTitleError.value.isError && !postDurationError.value.isError && !postImagesError.value.isError){
-        router.push({path: '/create-post/step-2'})
-    
         store.commit('saveFirstStepData', {
             title, duration
         });
+        router.push({path: '/create-post/step-2'})
     }else{
         return null
     }
@@ -54,6 +61,10 @@ const goToSecondStep = function(){
 
 const getCroppedImages = function(payload: File[]){    
     store.commit('addNewPostImages', payload);
+}
+
+const removePreview = function(index: number){
+    store.commit('removePreviewThumbnail', index);
 }
 </script>
 
@@ -88,7 +99,13 @@ const getCroppedImages = function(payload: File[]){
                 <div class="form-title">Trip Duration</div>
                 <p class="common-text no-margins m-t-4">How long was the vacation?</p>
             </label>
-            <input v-model="duration" type="text" class="form-text-input m-t-8" placeholder="Type here">
+            <div class="d-flex align-items-end gap-16">
+                <input inputmode="numeric" v-model="durationNumber" type="number" class="form-text-input number-input m-t-8" placeholder="Number">
+                <select v-model="durationTime" name="pets" id="pet-select">
+                    <option value="days">Day(s)</option>
+                    <option value="weeks">Week(s)</option>
+                </select>
+            </div>
             <div v-if="postDurationError.isError" class="small-text error-text m-t-4">{{ postDurationError.message}}</div>
         </div>
 
@@ -100,6 +117,7 @@ const getCroppedImages = function(payload: File[]){
             <ImageCropper
                 :isError="postImagesError.isError"
                 @updateCroppedImages="getCroppedImages" 
+                @removePreview="removePreview"
                 :isRound="false" :maxImages="5" 
                 class="m-t-16"  
                 :previews="store.state.newPost.images"
@@ -117,5 +135,18 @@ const getCroppedImages = function(payload: File[]){
     top: 0;
     left: 0;
     width: 100%;
+}
+
+.number-input{
+    width: 80px;
+}
+
+select,
+::picker(select) {
+    font-family: 'Raleway' !important;
+    border: none;
+    border-bottom: 1px solid $black;
+    font-size: 1rem;
+    padding-bottom: 2px;
 }
 </style>

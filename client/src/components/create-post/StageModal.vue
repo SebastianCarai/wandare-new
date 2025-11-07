@@ -42,6 +42,9 @@ const closeStageModal = function(){
 }
 
 const getAddressData = function(addressData: any, placeResultData: any){
+    console.log('addressData: ', addressData);
+    console.log('placeResultData: ', placeResultData);
+    
     stage.value.stageName = placeResultData.name;
     stage.value.coordinates = [addressData.latitude, addressData.longitude];
 }

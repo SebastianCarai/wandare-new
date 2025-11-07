@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const kinde_1 = require("../config/kinde");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const app_1 = require("../app");
+const basicAuth_1 = require("../middlewares/basicAuth");
 const jwt = jsonwebtoken_1.default;
 const router = (0, express_1.Router)();
 // Handle login, register, callback and logout routes for authentication
@@ -22,7 +24,7 @@ router.get("/register", async (req, res) => {
     const registerUrl = await kinde_1.kindeClient.register(sessionManager);
     return res.redirect(registerUrl.toString());
 });
-// Callback after login
+// Callback after login/signup
 router.get('/callback', async (req, res) => {
     try {
         const sessionManager = (0, kinde_1.createCookieSessionManager)(req, res);
@@ -37,18 +39,43 @@ router.get('/callback', async (req, res) => {
         res.status(500).send('Login failed');
     }
 });
-router.get('/status', async (req, res) => {
-    try {
-        const sessionManager = (0, kinde_1.createCookieSessionManager)(req, res);
-        const isAuthenticated = await kinde_1.kindeClient.isAuthenticated(sessionManager);
-        if (isAuthenticated) {
-            return res.json({ isAuthenticated: true });
+// This endpoint gets called to check the status of a user after a login
+// Check if the user exist in the users table on Supabase
+// If it doesn't >> it's a new user >> redirect to /complete-registration to complete the profile
+router.get('/status', basicAuth_1.authWithUserProfile, async (req, res) => {
+    const { data: user, error: userError } = await app_1.supabase
+        .from('users')
+        .select('kinde_id')
+        .eq('kinde_id', req.profile?.id)
+        .maybeSingle();
+    if (userError) {
+        console.error(userError);
+        return res.status(500).json({ message: 'Something bad happened. Please try again' });
+    }
+    // The user has just signed up >> create row in Supabase
+    // Send redirect instructions to the client
+    if (!user) {
+        try {
+            await app_1.supabase.from('users').insert({
+                'kinde_id': req.profile?.id,
+                'is_profile_complete': false
+            });
+            return res.json({
+                isAuthenticated: true,
+                redirect: '/complete-registration',
+                profile: req.profile
+            });
         }
-        res.json({ isAuthenticated: false });
+        catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Something bad happened. Please try again' });
+        }
     }
-    catch (error) {
-        res.json({ isAuthenticated: false });
-    }
+    // If the user exists in the DB >> it's a login >> return auth state (without redirect instructions)
+    res.json({
+        isAuthenticated: true,
+        profile: req.profile
+    });
 });
 // Handle logout
 router.get("/logout", async (req, res) => {

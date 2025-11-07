@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BadImageDimensionsError = void 0;
 exports.generateRandomString = generateRandomString;
 const express_1 = require("express");
 const multer_1 = __importDefault(require("multer"));
@@ -33,10 +34,12 @@ class BadImageDimensionsError extends Error {
         this.name = 'BadImageDimensionsError';
     }
 }
+exports.BadImageDimensionsError = BadImageDimensionsError;
 // 1. Upload the main posts images to s3
 // 2. Save the base post data to the DB
 // 3. For each stage: upload stage images to s3, then save the stage data to the DB
 router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async (req, res) => {
+    const authorName = req.profile.preferred_username || `${req.profile.given_name} ${req.profile.family_name}`;
     // Get all the images from the files
     const images = req.files;
     // Each image has a "fieldname" key which is either 'postImages' (which referes to the post main images),
@@ -67,8 +70,11 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
     if (postData.title.length === 0 || !postData.title ||
         postData.duration.length === 0 || !postData.duration ||
         stages.length === 0 ||
-        postImages.length === 0)
+        postImages.length === 0) {
+        req.files.forEach(file => delete file.buffer);
+        delete req.files;
         return res.status(400).json({ message: 'Missing minimum required data' });
+    }
     const bucketName = process.env.BUCKET_NAME;
     const couldfrontUrl = process.env.CLOUDFRONT_URL;
     // This function validates the metadata for each image (throws error if the image is wider than 1000px)
@@ -117,12 +123,16 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
     if (rejectedPostImages.length > 0) {
         await deleteImagesFromS3(uploadedPostImages);
         if (rejectedPostImages.some(r => r.reason instanceof BadImageDimensionsError)) {
+            req.files.forEach(file => delete file.buffer);
+            delete req.files;
             return res.status(400).json({ message: 'Bad post image dimensions' });
         }
         else {
             console.error(`Error while uploading post images to s3. 
                 User: ${req.profile?.id}. 
                 Rejected images: `, rejectedPostImages);
+            req.files.forEach(file => delete file.buffer);
+            delete req.files;
             return res.status(500).json({ message: 'Something bad happened. Please try again' });
         }
     }
@@ -132,13 +142,13 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
         .insert({
         title: postData.title,
         author_id: req.profile.id,
-        author_name: `${req.profile.given_name} ${req.profile.family_name}`,
+        author_name: authorName,
         images: uploadedPostImages.map(image => image.value.url),
         map_center: postData.mapCenter,
         map_zoom: postData.mapZoom,
         number_of_stages: stages.length,
         duration: postData.duration,
-        description: postData.duration,
+        description: postData.description,
         what_to_bring: postData.whatToBring,
         pricing: postData.pricing,
         required_documents: postData.documents,
@@ -149,6 +159,8 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
     if (uploadPostError) {
         console.error('Error uploading base post data to DB: ', uploadPostError);
         await deleteImagesFromS3(uploadedPostImages);
+        req.files.forEach(file => delete file.buffer);
+        delete req.files;
         return res.status(500).json({ message: 'Something bad happened. Please try again' });
     }
     // For each stage upload images (with error handling)
@@ -196,9 +208,13 @@ router.post('/create-post', basicAuth_1.authWithUserProfile, upload.any(), async
             stages: finalStages
         };
         const formattedFinalPost = zod_schemas_1.PostApiSchema.safeParse(finalPost);
+        req.files.forEach(file => delete file.buffer);
+        delete req.files;
         return res.status(201).json(formattedFinalPost.data);
     }
     catch (error) {
+        req.files.forEach(file => delete file.buffer);
+        delete req.files;
         if (error instanceof BadImageDimensionsError) {
             return res.status(400).json({ message: 'Bad image dimensions' });
         }

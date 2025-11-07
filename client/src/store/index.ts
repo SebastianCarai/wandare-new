@@ -4,7 +4,6 @@ import type { Coordinates, Newstage } from '@/types';
 
 export const store = createStore<RootState>({
     state:{
-        isAuthenticated: false,
         statusCode: 200,
         errorMessage: '',
         isLoading: false,
@@ -51,8 +50,19 @@ export const store = createStore<RootState>({
             state.newPost.pricing = thirdStepData.pricing || '';
             state.newPost.documents = thirdStepData.documents || '';
         },
-        setAuthStatus(state, isAuthenticated: boolean){            
-            state.isAuthenticated = isAuthenticated;
+        emptyNewPostState(state){
+            state.newPost =  {
+                title: '',
+                duration: '',
+                images: [],
+                mapCenter: [],
+                mapZoom: 0,
+                stages: [],
+                description: '',
+                whatToBring: '',
+                pricing: '',
+                documents: ''
+            }
         },
         setStatusAndError(state, payload: {statusCode: number, errorMessage: string}){
             state.statusCode = payload.statusCode;

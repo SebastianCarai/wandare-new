@@ -38,6 +38,7 @@ const createPost = function(){
     .then((res) => {
         // Redirect to page
         store.commit('setLoadingState', false);
+        store.commit('emptyNewPostState');
         router.push( { path : `/posts/${res.data.id}` } )
     })
 }
@@ -118,7 +119,7 @@ const createPost = function(){
     </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .textarea-input{
     display: block;
     width: 100%;

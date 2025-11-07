@@ -1,7 +1,8 @@
 import { Router } from "express";
 import {kindeClient, createCookieSessionManager } from "../config/kinde"
 import jsonwebtoken from 'jsonwebtoken';
-import { basicAuth, authWithUserProfile } from "../middlewares/basicAuth";
+import { supabase } from "../app";
+import { authWithUserProfile } from "../middlewares/basicAuth";
 
 const jwt = jsonwebtoken;
 
@@ -25,7 +26,7 @@ router.get("/register", async (req, res) => {
 });
 
 
-// Callback after login
+// Callback after login/signup
 router.get('/callback', async (req, res) => {
   try {
     const sessionManager = createCookieSessionManager(req, res);
@@ -43,20 +44,47 @@ router.get('/callback', async (req, res) => {
   }
 });
 
-router.get('/status', async (req, res) => {  
-  try {
-    const sessionManager = createCookieSessionManager(req, res);
-    const isAuthenticated = await kindeClient.isAuthenticated(sessionManager);
+// This endpoint gets called to check the status of a user after a login
+// Check if the user exist in the users table on Supabase
+// If it doesn't >> it's a new user >> redirect to /complete-registration to complete the profile
+router.get('/status', authWithUserProfile, async (req, res) => {
 
-    if(isAuthenticated){
-      return res.json({ isAuthenticated : true });
-    }
-    
-    res.json({ isAuthenticated : false });
+  const {data: user, error: userError} = await supabase
+  .from('users')
+  .select('kinde_id')
+  .eq('kinde_id', req.profile?.id)
+  .maybeSingle()
 
-  } catch (error) {
-    res.json({ isAuthenticated : false });
+  if(userError) {
+    console.error(userError);
+    return res.status(500).json({message: 'Something bad happened. Please try again'});
   }
+
+  // The user has just signed up >> create row in Supabase
+  // Send redirect instructions to the client
+  if(!user){
+    try {
+      await supabase.from('users').insert({
+        'kinde_id':req.profile?.id,
+        'is_profile_complete': false
+      });
+      
+      return res.json({
+        isAuthenticated : true,
+        redirect: '/complete-registration',
+        profile: req.profile
+      })
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({message: 'Something bad happened. Please try again'});
+    }
+  }
+
+  // If the user exists in the DB >> it's a login >> return auth state (without redirect instructions)
+  res.json({ 
+    isAuthenticated : true,
+    profile: req.profile
+  });
 });
 
 // Handle logout
