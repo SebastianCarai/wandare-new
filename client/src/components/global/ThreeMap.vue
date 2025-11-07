@@ -9,12 +9,12 @@ import Loader from './Loader.vue';
 import { useStore } from 'vuex';
 import { defaultCameraPositions, moveCameraXYZ } from '@/utils/threejs';
 import * as TWEEN from 'three/examples/jsm/libs/tween.module.js';
+import getStarfield from '@/utils/threejs';
 
 const store = useStore();
 store.commit('setLoadingState', true);
 
 const emit = defineEmits(["showContinentsConfirmModal"]);
-
 
 const router = useRouter();
 
@@ -80,6 +80,9 @@ loader.load('/models/world-continents-with-text.glb', function(gltf) {
 }, undefined, function(error){
     console.error(error)
 });
+
+const stars = getStarfield({ numStars: 1000, fog: false });
+scene.add(stars);
 
 // Create raycaster and mouse entity
 const raycaster = new THREE.Raycaster();
