@@ -167,7 +167,7 @@ const removeThumbnail = function(index : number){
             </div>
 
             <div class="d-flex justify-content-center align-items-center">
-                <button @click="cropImage" class="default-button m-t-8 m-b-8">Crop Image</button>
+                <button @click="cropImage" class="common-button m-t-8 m-b-8">Crop Image</button>
             </div>
         </dialog>
     </div>

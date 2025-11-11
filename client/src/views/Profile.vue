@@ -19,7 +19,7 @@ const logout = () => {
 
 <template>
     <div class="p-absolute-centered">
-        <a class="default-button" @click="logout">Logout</a>
+        <a class="common-button" @click="logout">Logout</a>
     </div>
 
     <Navbar activeNavItem="profile" />

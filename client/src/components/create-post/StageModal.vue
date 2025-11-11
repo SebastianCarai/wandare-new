@@ -57,6 +57,10 @@ const updateStageImages = function(payload: Array<File>){
     }
 }
 
+const removeStageImagePreview = function(indexToDelete : number){
+    stage.value.images.splice(indexToDelete, 1);
+}
+
 const saveStage = function(){
     store.commit('addStage', stage.value);
     closeStageModal();
@@ -133,7 +137,14 @@ const saveStage = function(){
 
                 <div style="width: 100%;">
                     <label for="stage-images" class="m-b-8">Stage images (max. 3)</label>
-                    <ImageCropper id="stage-images" :previews="stage.images" @updateCroppedImages="updateStageImages" :maxImages="3" :isWhite="true" />
+                    <ImageCropper 
+                        id="stage-images" 
+                        :previews="stage.images" 
+                        @updateCroppedImages="updateStageImages" 
+                        :maxImages="3" 
+                        :isWhite="true"
+                        @removePreview="removeStageImagePreview"
+                    />
                 </div>
             </div>
 

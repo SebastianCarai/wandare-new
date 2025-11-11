@@ -10,7 +10,7 @@
                     you need to be logged in
                 </div>
         
-                <a href="/api/login" class="default-button">Login</a>
+                <a href="/api/login" class="common-button">Login</a>
             </div>
         </div>
     </div>

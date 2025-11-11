@@ -68,7 +68,7 @@ const completeProfile = async () => {
 
         <div class="bottom-buttons d-flex justify-content-center align-items-center gap-16">
             <router-link to="/" class="ghost-button">Remind me later</router-link>
-            <button @click="completeProfile" class="default-button">Complete account</button>
+            <button @click="completeProfile" class="common-button">Complete account</button>
         </div>
     </div>
 </template>

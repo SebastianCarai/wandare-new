@@ -7,6 +7,10 @@
     row-gap: 1rem !important;
     column-gap: 1rem !important;
 }
+.gap-40{
+    row-gap: 2.5rem !important;
+    column-gap: 2.5rem !important;
+}
 
 /* Margins */
 .no-margins{
@@ -35,6 +39,9 @@
 }
 .m-b-8{
     margin-bottom: 0.5rem !important;
+}
+.m-b-40{
+    margin-bottom: 2.5rem !important;
 }
 .m-l-8{
     margin-left: 0.5rem !important;

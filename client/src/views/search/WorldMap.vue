@@ -4,9 +4,11 @@ import Navbar from '@/components/global/Navbar.vue';
 </script>
 
 <template>
-    <ThreeMap />
-
-    <Navbar active-nav-item="search" />
+    <div>
+        <ThreeMap />
+    
+        <Navbar active-nav-item="search" />
+    </div>
 </template>
 
 <style>
