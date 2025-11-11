@@ -39,9 +39,11 @@ defineProps<{
             </div>
         </div>
 
-        <!-- Post Author -->
+        <!-- Number of stages and durations -->
         <div class="m-t-4">
-            <span class="gray-text">Duration: <span class="post-duration">{{ post.duration }}</span></span>
+            <span class="gray-text"><span class="post-duration">{{ post.numberOfStages }}
+            </span> {{post.numberOfStages === 1 ? 'stage' : 'stages'}}</span> - 
+            <span class="post-duration">{{ post.duration }}</span>
         </div>
     </div>
 </template>

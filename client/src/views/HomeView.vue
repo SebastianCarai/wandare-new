@@ -21,6 +21,7 @@ onBeforeMount(async() => {
     try {
         const res = await axios.get('/api/posts');
         posts.value = res.data;
+        
         store.commit('setStatusAndError', {statusCode: 200, errorMessage: ''});
         store.commit('setLoadingState', false);
     } catch (error: any) {

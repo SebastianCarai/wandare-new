@@ -28,7 +28,8 @@ export interface BasePost{
     authorId: string,
     authorName: string,
     images: string[],
-    duration: string
+    duration: string,
+    numberOfStages: number
 };
 
 export interface Post extends BasePost{
