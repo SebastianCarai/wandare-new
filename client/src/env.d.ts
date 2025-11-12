@@ -25,6 +25,12 @@ declare module 'leaflet' {
   export default L
 }
 
+declare module 'vue-sortable' {
+  import { Plugin } from 'vue';
+  const VueSortable: Plugin;
+  export default VueSortable;
+}
+
 declare module '*.svg' {
   const content: string
   export default content

@@ -8,9 +8,11 @@ import 'swiper/css/pagination';
 
 withDefaults(defineProps<{
   images: string[],
-  isFullScreen?: boolean 
+  isFlexGrow?: boolean
+  isFullScreen?: boolean
 }>(), {
-    isFullScreen : false
+    isFullScreen : false,
+    isFlexGrow : true,
 })
 </script>
 
@@ -20,11 +22,11 @@ withDefaults(defineProps<{
         :modules="[Pagination]"
         :pagination="true" 
         :loop="true"
-        class="post-image-slider flex-grow-1"
-        :class="{'full-screen' : isFullScreen}"
+        class="post-image-slider"
+        :class="{'full-screen' : isFullScreen, 'flex-grow-1' : isFlexGrow}"
     >
         <SwiperSlide class="post-card-slide" v-for="(image, index) in images" :key="index">
-            <img :src="image" .alt="image">
+            <img :src="image" :alt="image">
         </SwiperSlide>
     </Swiper>
 </template>

@@ -5,11 +5,15 @@ import { useStore } from 'vuex';
 import {ref} from 'vue';
 import { useRouter } from 'vue-router';
 import Map from '@/components/global/Map.vue';
+import Slider from '@/components/global/Slider.vue';
+import draggable from 'vuedraggable';
 
 const router = useRouter();
 const store = useStore();
 const activeAccordionItem = ref<number>(-1);
 const isAccordionOpen = ref<boolean>(false);
+const galleryImages = ref<string[]>([]);
+const isGalleryOpen = ref<boolean>(false);
 
 const stageError = ref<boolean>(false);
 
@@ -54,6 +58,19 @@ const centerUpdated = function(newCenter: number[]){
 const zoomUpdated = function(newZoom: number){
     store.commit('updateMapZoom', newZoom);
 }
+
+const openGallery = function(stageImages: File[]){
+    galleryImages.value.forEach(url => URL.revokeObjectURL(url));
+    galleryImages.value = stageImages.map(file => URL.createObjectURL(file));
+
+    isGalleryOpen.value = true;
+}
+const closeGallery = function(){
+    galleryImages.value.forEach(url => URL.revokeObjectURL(url));
+    galleryImages.value = [];
+    isGalleryOpen.value = false;
+}
+
 </script>
 
 <template>
@@ -78,7 +95,6 @@ const zoomUpdated = function(newZoom: number){
         </div>
 
         <div v-if="store.state.newPost.stages.length > 0" class="m-t-16">
-
             <Map 
                 @updateCenter="centerUpdated"
                 @updateZoom="zoomUpdated"
@@ -90,28 +106,40 @@ const zoomUpdated = function(newZoom: number){
 
         <StageModal :isError="stageError" />
 
-        <div :class="{open : isAccordionOpen && activeAccordionItem == index}" class="stage-item m-t-16" v-for="(stage, index) in store.state.newPost.stages" :key="index">
-            <div class="d-flex justify-content-between p-16" @click="switchAccordion(index)">
-                <div class="d-flex justify-content-start align-items-center gap-8">
-                    <img class="stage-icon" v-if="stage.type == 'poi'" src="@/assets/icons/poi-icon-black.svg" alt="">
-                    <img class="stage-icon" v-if="stage.type == 'restaurant'" src="@/assets/icons/restaurant-icon-black.svg" alt="">
-                    <img class="stage-icon" v-if="stage.type == 'accommodation'" src="@/assets/icons/accommodation-icon-black.svg" alt="">
-                    <div class="vertical-divider"></div>
-                    <div class="accordion-title">{{ stage.stageName }}</div>
+        <draggable v-model="store.state.newPost.stages" group="stages" item-key="stageName">
+            <template #item="{ element, index }">
+                <div :class="{open : isAccordionOpen && activeAccordionItem == index}"  class="stage-item m-t-16">
+                    <div class="d-flex justify-content-between p-16" @click="switchAccordion(index)">
+                        <div class="d-flex justify-content-start align-items-center gap-8">
+                            <img class="stage-icon" v-if="element.type == 'poi'" src="@/assets/icons/poi-icon-black.svg" alt="">
+                            <img class="stage-icon" v-if="element.type == 'restaurant'" src="@/assets/icons/restaurant-icon-black.svg" alt="">
+                            <img class="stage-icon" v-if="element.type == 'accommodation'" src="@/assets/icons/accommodation-icon-black.svg" alt="">
+                            <div class="vertical-divider"></div>
+                            <div class="accordion-title">{{ element.stageName }}</div>
+                        </div>
+        
+                        <img src="../../assets/icons/chevron-circle-icon-black.svg" alt="">
+                    </div>
+        
+                    <div v-if="isAccordionOpen && activeAccordionItem == index">
+                        <p v-if="element.stageDescription" class="accordion-body common-text m-t-24 no-margins p-x-16"> {{ element.stageDescription }}</p>
+                    
+                        <div class="view-gallery-button text-white common-text" @click="openGallery(element.images)">
+                            View gallery
+                        </div>
+                    </div>
                 </div>
+            </template>
+        </draggable>
 
-                <img src="../../assets/icons/chevron-circle-icon-black.svg" alt="">
-            </div>
+        <div v-if="isGalleryOpen" class="photo-gallery flex-column d-flex justify-content-center align-items-center gap-40 p-16">
+            <Slider :images="galleryImages" :isFlexGrow="false" />
 
-            <div v-if="isAccordionOpen && activeAccordionItem == index">
-                <p class="accordion-body common-text m-t-24 no-margins p-x-16"> {{ stage.stageDescription }}</p>
-            
-                <div class="view-gallery-button text-white common-text">
-                    View gallery
-                </div>
+            <div>
+                <button @click="closeGallery" class="common-button">Close gallery</button>
             </div>
         </div>
-
+        
 
         <Navbar activeNavItem="create-post" />
     </div>
@@ -122,6 +150,7 @@ const zoomUpdated = function(newZoom: number){
 .stage-item{
     border: 1px solid $black;
     border-radius: 0.5rem;
+    background-color: $white;
 
     &.open .accordion-body{
         max-height: 30000px;
@@ -148,5 +177,15 @@ const zoomUpdated = function(newZoom: number){
     height: 100%;
     width: 1px;
     background-color: $black;
+}
+
+.photo-gallery{
+    width: 100%;
+    height: 100dvh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: rgba($color: $white, $alpha: 0.6);
 }
 </style>
