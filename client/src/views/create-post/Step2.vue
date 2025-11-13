@@ -122,9 +122,9 @@ const closeGallery = function(){
                     </div>
         
                     <div v-if="isAccordionOpen && activeAccordionItem == index">
-                        <p v-if="element.stageDescription" class="accordion-body common-text m-t-24 no-margins p-x-16"> {{ element.stageDescription }}</p>
+                        <p v-if="element.stageDescription" class="accordion-body common-text m-t-8 m-b-8 no-margins p-x-16"> {{ element.stageDescription }}</p>
                     
-                        <div class="view-gallery-button text-white common-text" @click="openGallery(element.images)">
+                        <div v-if="element.images.length > 0" class="view-gallery-button text-white common-text" @click="openGallery(element.images)">
                             View gallery
                         </div>
                     </div>

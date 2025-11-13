@@ -15,13 +15,9 @@ const isModalOpen = ref<boolean>(false);
 const selectedContinent = ref<string>('');
 const selectedPath = ref<string>('');
 
-
-const handleModal = function(openModal: boolean){
-    isModalOpen.value = openModal;
-}
-
 const store = useStore();
 store.commit('setLoadingState', true);
+
 
 // Create scene and give it a black background
 // Change BG to stars
@@ -93,10 +89,30 @@ scene.add(stars);
 // Create raycaster and mouse entity
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-document.addEventListener( 'click', onMouseClick );
+let isRaycasterEnabled = true;
+
+const handleModal = function(openModal: boolean){
+    isModalOpen.value = openModal;
+}
+
+const closeModal = function(){
+    isModalOpen.value = false;
+    setTimeout(() => {
+        isRaycasterEnabled = true;
+    }, 100);
+}
+
+
+document.addEventListener( 'click', (e) => {
+    if(isRaycasterEnabled){
+        onMouseClick(e);
+    } 
+    else return
+} );
 
 function onMouseClick( event: any ) { 
-    if(isModalOpen.value) return   
+    
+    if(!isRaycasterEnabled) return 
 
     selectedContinent.value = '';
     selectedPath.value = '';
@@ -156,7 +172,11 @@ function onMouseClick( event: any ) {
         }
     }
 
-    if(selectedContinent.value.length > 0 && selectedPath.value.length > 0) handleModal(true);
+    if(selectedContinent.value.length > 0 && selectedPath.value.length > 0){
+        store.commit('setRaycasterState', false);
+        isRaycasterEnabled = false;
+        handleModal(true);
+    } 
         
 }
 
@@ -197,18 +217,15 @@ onBeforeUnmount(() => {
     
     renderer.domElement.remove();
 });
-
-
-
 </script>
 
 
 <template>
     <div v-if="isModalOpen" class="continent-overlay d-flex justify-content-center align-items-end">
         <div class="d-flex justify-content-center gap-16 m-b-40 p-16">
-            <button @click="handleModal(false)" class="common-button ghost-button">Cancel</button>
+            <button @click="closeModal" class="common-button ghost-button">Cancel</button>
             <router-link :to="`/continents/${selectedPath}`">
-                <button class="common-button">View posts for <div style="display: inline-block;">{{ selectedContinent }}</div></button>
+                <button class="common-button">View posts for <br> <div style="display: inline-block;">{{ selectedContinent }}</div></button>
             </router-link>
         </div>
     </div>
