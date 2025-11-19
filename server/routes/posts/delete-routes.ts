@@ -5,8 +5,8 @@ import { s3Client } from "../../config/config";
 import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
 const router = Router();
 
-router.delete('/:id', async(req: Request, res: Response) => {
-    const postId = req.params.id;
+router.delete('/:post_id', async(req: Request, res: Response) => {
+    const postId = req.params.post_id;
 
     const {data: postData, error: postAuthorError} = await supabase
     .from('posts')
@@ -60,8 +60,6 @@ router.delete('/:id', async(req: Request, res: Response) => {
         }
 
     }
-
-    
 });
 
 export default router

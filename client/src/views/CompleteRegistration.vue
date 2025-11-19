@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import ImageCropper from '@/components/create-post/ImageCropper.vue';
+import ImageCropper from '@/components/post-create-edit/ImageCropper.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 

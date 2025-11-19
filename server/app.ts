@@ -7,7 +7,8 @@ import { createClient } from '@supabase/supabase-js';
 import cors from 'cors';
 import authRouter from './routes/auth';
 import postRouter from './routes/posts/index';
-import profileRouter from './routes/profile/index'
+import profileRouter from './routes/profile/index';
+import imageRouter from './routes/images/index';
 import dotenv from 'dotenv';
 dotenv.config();
 import path from "path";
@@ -30,6 +31,7 @@ app.set("trust proxy", true);
 app.use('/api', authRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/profile', profileRouter);
+app.use('/api/images', imageRouter);
 
 // --- Serve Vue static files ---
 const distPath = path.join(__dirname, "../client/dist");

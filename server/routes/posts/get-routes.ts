@@ -45,10 +45,10 @@ router.get('/', authWithUserProfile,  async(req: Request, res: Response) => {
 });
 
 // Post details route
-router.get('/:id', async(req: Request, res: Response) => {
+router.get('/:post_id', async(req: Request, res: Response) => {
 
     // Get post id from url
-    const id : number = parseInt(req.params.id as string);
+    const id : number = parseInt(req.params.post_id as string);
 
     // Query for post details and stages
     const {data, error: postDetailsError} = await supabase

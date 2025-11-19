@@ -20,11 +20,16 @@ export interface ThirdStep{
     documents?: string
 }
 
-export interface NewPost extends FirstStep, SecondStep, ThirdStep{}
+export interface NewPost extends FirstStep, SecondStep, ThirdStep{ id? : number}
 
 export interface RootState{
     newPost: NewPost,
     statusCode: number,
     errorMessage: string,
-    isLoading: boolean
+    isLoading: boolean,
+    updatedPostData : Record<string, any>,
+    keysToDelete: string[],
+    isImageDeletePopup: boolean,
+    imageToDelete: string,
+    imageIndexToDelete: number | null
 }

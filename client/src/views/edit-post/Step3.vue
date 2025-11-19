@@ -4,15 +4,16 @@ import { useStore } from 'vuex';
 import {ref} from 'vue';
 import axios from 'axios';
 import { createPostFormData } from '@/functions/functions';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Loader from '@/components/global/Loader.vue';
 
 const store = useStore();
 const router = useRouter();
-const description = ref<string>('');
-const whatToBring = ref<string>('');
-const pricing = ref<string>('');
-const documents = ref<string>('');
+const route = useRoute();
+const description = ref<string>(store.state.newPost.description);
+const whatToBring = ref<string>(store.state.newPost.whatToBring);
+const pricing = ref<string>(store.state.newPost.pricing);
+const documents = ref<string>(store.state.newPost.documents);
 
 const createPost = function(){
 
@@ -29,7 +30,18 @@ const createPost = function(){
     // Create formdata to send to the server from the store state with newPost data
     const formData = createPostFormData(store.state.newPost);    
 
-    axios.post('/api/posts/create-post', formData, {
+    // axios.post('/api/posts/create-post', formData, {
+    //     headers: {
+    //         'Content-Type': 'multipart/form-data'
+    //     }
+    // })
+    
+
+    for (var pair of formData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+    }
+    
+    axios.put(`/api/posts/edit-post/${route.params.id}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
@@ -37,8 +49,8 @@ const createPost = function(){
     .then((res) => {
         // Redirect to page
         store.commit('setLoadingState', false);
-        store.commit('emptyNewPostState');
-        router.push( { path : `/posts/${res.data.id}` } )
+        // store.commit('emptyNewPostState');
+        // router.push( { path : `/posts/${res.data.id}` } )
     })
 }
 </script>
@@ -52,7 +64,7 @@ const createPost = function(){
             <div class="d-flex justify-content-between align-items-center p-y-16">
                 <router-link 
                     type="button" 
-                    to="/create-post/step-2"
+                    :to="`/edit-post/${route.params.id}/step-2`"
                     class="go-back-button static" 
                     aria-label="Go back to the previous page"
                 >

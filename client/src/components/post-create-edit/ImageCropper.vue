@@ -2,6 +2,7 @@
 import { useTemplateRef, ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import VuePictureCropper, { cropper } from 'vue-picture-cropper';
 import { generateRandomString, resizeWithPica } from '@/functions/functions';
+import { useRoute } from 'vue-router';
 
 const props = defineProps<{
     maxImages: number,
@@ -10,19 +11,39 @@ const props = defineProps<{
     isError?: boolean
 }>();
 
+const route = useRoute();
+
 // Emit updateCroppedImages event to pass the cropped images to the parent component
 const emit = defineEmits(["updateCroppedImages", "removePreview"]);
 
 // Image that is passed to the cropper >> It's a base64 string
 const pic = ref<string>('');
 
+// Create base64 urls from files to pass to the previews
 const previewUrls = ref<string[]>([]);
 const buildPreview = function(files: File[]){
     previewUrls.value.forEach(url => URL.revokeObjectURL(url));
     previewUrls.value = files.map(file => URL.createObjectURL(file));
 }
+
+const updatePreviews = function(files : File[]){
+    previewUrls.value = [];
+
+    if((route.name as string).includes('Edit Post')){
+        props.previews.forEach((image: string | File) => {
+            if(typeof(image) === 'object'){
+                previewUrls.value.push(URL.createObjectURL(image));
+            }else if(typeof(image) === 'string'){
+                previewUrls.value.push(image);
+            }
+        });
+    }else{
+        buildPreview(files);
+    }
+}
+
 onMounted(() => {
-    buildPreview(props.previews)
+    updatePreviews(props.previews);
 });
 
 onBeforeUnmount(() => {
@@ -32,7 +53,7 @@ onBeforeUnmount(() => {
 
 watch(
     () => props.previews,
-    (newFiles) => buildPreview(newFiles),
+    (newFiles) => updatePreviews(newFiles),
     { deep: true }
 )
 
@@ -116,8 +137,9 @@ const cropImage = async function(){
     }
 }
 
-const removeThumbnail = function(index : number){
-    emit('removePreview', index);
+// Remove thumbnail
+const removeThumbnail = function(index : number, image: string){
+    emit('removePreview', index, image);
 }
 </script>
 
@@ -135,7 +157,7 @@ const removeThumbnail = function(index : number){
             <!-- Previews -->
             <div v-if="previewUrls.length > 0" v-for="(image, index) in previewUrls" :key="index" class="image-thumbnail">
                 <img :src="image" alt="Thumbnail">
-                <img @click="removeThumbnail(index)" class="remove-thumbnail-icon" src="../../assets/icons/close-icon-white-bg-black-stroke.svg" alt="Remove thumbnail image">
+                <img @click="removeThumbnail(index, image)" class="remove-thumbnail-icon" src="../../assets/icons/close-icon-white-bg-black-stroke.svg" alt="Remove thumbnail image">
             </div>
         </div>           
     
@@ -224,6 +246,5 @@ const removeThumbnail = function(index : number){
         right: 0.25rem;
     }
 }
-
 
 </style>

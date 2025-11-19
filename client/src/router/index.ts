@@ -5,6 +5,9 @@ import PostDetailsPage from "@/views/PostDetailsPage.vue";
 import Step1 from "@/views/create-post/Step1.vue";
 import Step2 from "@/views/create-post/Step2.vue";
 import Step3 from "@/views/create-post/Step3.vue";
+import EditPostStep1 from "@/views/edit-post/Step1.vue";
+import EditPostStep2 from "@/views/edit-post/Step2.vue";
+import EditPostStep3 from "@/views/edit-post/Step3.vue";
 import Login from '@/views/Login.vue';
 import CompleteRegistration from "@/views/CompleteRegistration.vue";
 import axios from "axios";
@@ -63,7 +66,22 @@ const routes: Array<RouteRecordRaw> = [
     path: '/continents/:id',
     name: 'Continent Page',
     component: Continent
-  }
+  },
+  {
+    path: '/edit-post/:id/step-1',
+    name: 'Edit Post | Step 1',
+    component: EditPostStep1
+  },
+  {
+    path: '/edit-post/:id/step-2',
+    name: 'Edit Post | Step 2',
+    component: EditPostStep2
+  },  
+  {
+    path: '/edit-post/:id/step-3',
+    name: 'Edit Post | Step 3',
+    component: EditPostStep3
+  },
 ]
 
 const router = createRouter({

@@ -34,12 +34,7 @@ const goToStep3 = function(){
             store.commit('updateMapZoom', 12);
         }
 
-                // Redirect to the proper route
-        if((route.name as string).includes('Edit Post')){
-            router.push({path: `/edit-post/${route.params.id}/step-3`})
-        }else{
-            router.push({path: '/create-post/step-3'});
-        }
+        router.push({path: `/edit-post/${route.params.id}/step-3`})
     }
 }
 
@@ -65,6 +60,10 @@ const zoomUpdated = function(newZoom: number){
     store.commit('updateMapZoom', newZoom);
 }
 
+// const updateStageDescription = function(){
+
+// }
+
 const openGallery = function(stageImages: File[] | string[]){
 
     if(typeof(stageImages[0]) === 'string'){
@@ -81,15 +80,18 @@ const closeGallery = function(){
     galleryImages.value = [];
     isGalleryOpen.value = false;
 }
+
+
 </script>
 
 <template>
     <div class="view-container">
+        
         <!-- Create Post Header -->
         <div class="create-post-header">
             <div class="d-flex justify-content-between align-items-center p-y-16">
                 <router-link type="button" 
-                    to="/create-post/step-1" 
+                    :to="`/edit-post/${route.params.id}/step-1`" 
                     class="go-back-button static" 
                     aria-label="Go back to the previous page"
                 >
@@ -102,12 +104,13 @@ const closeGallery = function(){
             <h2 class="main-title text-centered">Create Post</h2>
         </div>
 
-        <!-- Stages -->
+        <!-- Stages title-description section -->
         <div class="form-item-container m-t-16">
             <div class="form-title">Stages</div>
             <p class="common-text no-margins m-t-4">Time to add stages to your itinerary</p>
         </div>
 
+        <!-- Stages map -->
         <div v-if="store.state.newPost.stages.length > 0" class="m-t-16">
             <Map 
                 @updateCenter="centerUpdated"
@@ -118,8 +121,10 @@ const closeGallery = function(){
             <div class="common-text m-t-4">Adjust zoom and map center</div>
         </div>
 
+        <!-- Stage modal (includes the "Add stage" button) -->
         <StageModal :isError="stageError" />
 
+        <!-- Stages preview -->
         <draggable v-model="store.state.newPost.stages" group="stages" item-key="stageName">
             <template #item="{ element, index }">
                 <div :class="{open : isAccordionOpen && activeAccordionItem == index}"  class="stage-item m-t-16">
@@ -136,9 +141,11 @@ const closeGallery = function(){
                     </div>
         
                     <div v-if="isAccordionOpen && activeAccordionItem == index">
-                        <p v-if="element.stageDescription" class="accordion-body common-text m-t-8 m-b-8 no-margins p-x-16"> {{ element.stageDescription }}</p>
+                        <div class="p-x-16">
+                            <textarea v-model="element.stageDescription" class="accordion-body common-text m-t-8 m-b-8 no-margins p-x-8 p-y-8"> {{ element.stageDescription }}</textarea>
+                        </div>
                     
-                        <div v-if="element.images.length > 0" class="view-gallery-button text-white common-text" @click="openGallery(element.images)">
+                        <div class="view-gallery-button text-white common-text" @click="openGallery(element.images)">
                             View gallery
                         </div>
                     </div>
@@ -146,6 +153,7 @@ const closeGallery = function(){
             </template>
         </draggable>
 
+        <!-- Image gallery -->
         <div v-if="isGalleryOpen" class="photo-gallery flex-column d-flex justify-content-center align-items-center gap-40 p-16">
             <Slider :images="galleryImages" :isFlexGrow="false" />
 
@@ -178,13 +186,15 @@ const closeGallery = function(){
 
 .view-gallery-button{
     text-align: center;
-    margin-top: 16px;
+    margin-top: 0.5rem;
     background-color: $mainColor;
     padding: 0.5rem 0;
 }
 
 .accordion-body{
     max-height: 0;
+    width: 100%;
+    resize: none;
 }
 
 .vertical-divider{
