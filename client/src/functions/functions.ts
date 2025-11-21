@@ -54,7 +54,7 @@ export async function resizeWithPica(file: File, maxSize = 1000, quality = 0.8):
 import type { NewPost } from '@/types/state';
 import type { Newstage } from '@/types/index'
 
-export const createPostFormData = (post: NewPost): FormData => {
+export const createPostFormData = (post: NewPost) => {
     const formData = new FormData();
     
 
@@ -83,6 +83,30 @@ export const createPostFormData = (post: NewPost): FormData => {
     });
 
     return formData;
+}
+
+export const createUpdatedPostFormData = function(post: NewPost, updatedFields: any){
+    const formData = new FormData();
+
+    const newImages = post.images.filter(image => typeof(image) === 'object');
+
+    for (const [key, value] of Object.entries(updatedFields)){
+        if(key !== 'images' && key !== 'stages'){
+            formData.append(key, value as string)
+        }
+    }
+
+    newImages.forEach(image => {
+        formData.append('postImages', image)
+    });
+
+
+    return formData
+    // const newStageImages = post.stages
+    // .flatMap(stage => stage.images
+    //     .filter(img => typeof(img) === 'object')
+    //     .map(img => ({image: img, stage}))
+    // )
 }
 
 

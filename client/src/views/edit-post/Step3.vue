@@ -3,7 +3,7 @@ import Navbar from '@/components/global/Navbar.vue';
 import { useStore } from 'vuex';
 import {ref} from 'vue';
 import axios from 'axios';
-import { createPostFormData } from '@/functions/functions';
+import { createUpdatedPostFormData } from '@/functions/functions';
 import { useRoute, useRouter } from 'vue-router';
 import Loader from '@/components/global/Loader.vue';
 
@@ -28,7 +28,7 @@ const createPost = function(){
     });
 
     // Create formdata to send to the server from the store state with newPost data
-    const formData = createPostFormData(store.state.newPost);    
+    const formData = createUpdatedPostFormData(store.state.newPost, store.state.updatedPostData);    
 
     // axios.post('/api/posts/create-post', formData, {
     //     headers: {
@@ -37,20 +37,18 @@ const createPost = function(){
     // })
     
 
-    for (var pair of formData.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]); 
-    }
+
     
     axios.put(`/api/posts/edit-post/${route.params.id}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
     })
-    .then((res) => {
+    .then(() => {
         // Redirect to page
         store.commit('setLoadingState', false);
         // store.commit('emptyNewPostState');
-        // router.push( { path : `/posts/${res.data.id}` } )
+        router.push( { path : `/posts/${route.params.id}` } )
     })
 }
 </script>
@@ -93,6 +91,7 @@ const createPost = function(){
             v-model="description"
             placeholder="Type here..."
             class="textarea-input"
+            @keyup="store.commit('updatePostData', {key: 'description', value: description})"
         ></textarea>
 
         <label for="what-to-bring" class="m-t-16">
@@ -104,6 +103,7 @@ const createPost = function(){
             v-model="whatToBring"
             placeholder="Type here..."
             class="textarea-input"
+            @keyup="store.commit('updatePostData', {key: 'whatToBring', value: whatToBring})"
         ></textarea>
 
         <label for="what-to-bring" class="m-t-16">
@@ -115,6 +115,7 @@ const createPost = function(){
             v-model="pricing"
             placeholder="Type here..."
             class="textarea-input"
+            @keyup="store.commit('updatePostData', {key: 'pricing', value: pricing})"
         ></textarea>
 
 
@@ -127,6 +128,7 @@ const createPost = function(){
             v-model="documents"
             placeholder="Type here..."
             class="textarea-input"
+            @keyup="store.commit('updatePostData', {key: 'documents', value: documents})"
         ></textarea>
 
 

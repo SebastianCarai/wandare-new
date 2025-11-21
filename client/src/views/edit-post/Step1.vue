@@ -73,7 +73,7 @@ const goToSecondStep = function(){
 
     if(!postTitleError.value.isError && !postDurationError.value.isError && !postImagesError.value.isError){
         store.commit('saveFirstStepData', {
-            title, duration
+            title: title.value, duration: duration.value
         });
 
         router.push({path: `/edit-post/${route.params.id}/step-2`});

@@ -27,7 +27,7 @@ const mutations = {
     /*
         Remove image from thumbnail previews
 
-        @params newImages >> images cropped from ImageCropper
+        @params indexToDelete >> index of the image to remove
     */
     removePreviewThumbnail(state: RootState, indexToDelete: number){
         state.newPost.images.splice(indexToDelete, 1)
